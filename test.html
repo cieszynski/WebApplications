@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <title>Web Applications Test</title>
+    <meta charset="utf-8">
+
+    <style>
+        @font-face {
+            font-family: 'segoe-ui';
+            src: url('segoeuithis-webfont.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+
+        }
+
+        *,
+        *::after,
+        *::before {
+            margin: 0;
+            box-sizing: border-box;
+        }
+    </style>
+
+    <script src="application.js"></script>
+    <script src="ribbon.js"></script>
+
+    <style>
+        body {
+            font-family: 'segoe-ui';
+            background-color: #f0f0f0;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        header {
+            padding: 0 16px;
+            background-color: #fff;
+            display: flex;
+        }
+
+        menu {
+            user-select: none;
+            display: flex;
+            list-style: none;
+            height: 140px;
+            position: relative;
+            margin-block: 0;
+            margin-inline: 0;
+            padding-inline-start: 0;
+            padding: 0 16px;
+
+            &>li {
+                height: 25px;
+                padding: 0 8px;
+                font: 14px 'segoe-ui';
+
+                &>div.backstage,
+                &>div.tab {
+                    font: 12px 'segoe-ui';
+                    padding: 8px;
+                    background-color: #ffffff;
+                    border: 1px solid #d1d1d1;
+                    box-shadow: 0 0 5px #d1d1d1;
+                    inset: 28px 8px 0 8px;
+                    border-radius: 8px;
+                    position: absolute;
+                    display: none;
+
+                    &>div.group {
+                        display: grid;
+                        grid-template-rows: 1fr auto;
+                        border-right: 1px solid #e5e4e5;
+                        padding: 8px 8px 0 8px;
+                        position: relative;
+
+                        & button {
+                            font: 12px/1 'segoe-ui';
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            background-color: transparent;
+                            border-radius: 4px;
+                            border: none;
+                            margin-bottom: auto;
+                        }
+
+                        & button:hover {
+                            background-color: #e5e4e5;
+                        }
+
+                        &>div.buttongroup {
+                            display: flex;
+                        }
+                    }
+
+                    &>div.group::after {
+                        display: flex;
+                        justify-content: center;
+                        content: attr(title);
+                    }
+                }
+            }
+
+            &>li:first-of-type {
+
+                &>div.backstage {
+                    background-color: #ddd;
+                    height: 100vh;
+                    inset: 0;
+                }
+            }
+
+            &>li.active {
+                font-weight: 600;
+                border-bottom: 2px solid black;
+
+                &>div.backstage,
+                &>div.tab {
+                    font-weight: 500;
+                    display: flex;
+                }
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <menu id="ribbon">
+        <li>
+            Datei
+            <div class="backstage">A<div>X</div>
+            </div>
+        </li>
+        <li class="active">
+            Start
+            <div class="tab">
+                <div class="group" title="Maßnahmen">
+                    <button>
+                        <img src="delete.png" width="32" height="32" alt="">
+                        Löschen
+                    </button>
+                </div>
+                <div class="group" title="Vorlagen">
+                    <div class="buttongroup">
+                        <button>
+                            <img src="create.png" width="32" height="32" alt="">
+                            Erstellen
+                        </button>
+                        <button>
+                            <img src="use.png" width="32" height="32" alt="">
+                            Anwenden
+                        </button>
+                    </div>
+                </div>
+                <div class="group" title="Dokument">
+                    <button>
+                        <img src="show.png" width="32" height="32" alt="">
+                        Anzeigen
+                    </button>
+                </div>
+            </div>
+        </li>
+        <li>
+            Planung
+            <div class="tab">
+                <div class="group" title="Maßnahmen">
+                    group
+                </div>
+                <div class="group" title="Vorlagen">
+                    group
+                </div>
+            </div>
+        </li>
+    </menu>
+    <header>
+        <!--    <button></button> -->
+        <h1>Kalenderwoche</h1>
+        <!--    <button></button> -->
+    </header>
+    <main>
+
+    </main>
+
+    <script>
+        ribbon.querySelectorAll('li').forEach(element => {
+            element.onclick = (event) => {
+                console.log(event.target)
+                if (element === event.target) {
+                    ribbon.querySelectorAll('li').forEach(element => {
+                        element.classList.toggle('active', element === event.target);
+                    });
+                }
+            }
+        })
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <title>Web Applications</title>
+    <meta charset="utf-8">
+
+    <link rel="manifest" href="manifest.json" />
+
+</head>
+
+<body>
+    <button id="butOpenFile">Open</button>
+    <script>
+        if ('launchQueue' in window && 'files' in LaunchParams.prototype) {
+            console.log(1)
+            launchQueue.setConsumer((launchParams) => {
+                // Nothing to do when the queue is empty.
+                if (!launchParams.files.length) {
+                    console.log(2)
+                    return;
+                }
+                for (const fileHandle of launchParams.files) {
+                    // Handle the file.
+                    console.log(3)
+                }
+                console.log(4)
+            });
+        }
+        let fileHandle;
+
+        butOpenFile.addEventListener('click', async () => {
+            // Destructure the one-element array.
+            [fileHandle] = await window.showOpenFilePicker();
+            // Do something with the file handle.
+            const file = await fileHandle.getFile();
+            const contents = await file.text();
+
+            console.log(contents)
+        });
+    </script>
+</body>
+
+</html>
