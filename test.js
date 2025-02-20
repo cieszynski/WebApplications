@@ -15,4 +15,5 @@ function kalenderwoche(date) {
     return ~~((value - value2 + msec((new Date(value2)).getDay() + 6)) / msec(7));
 }
 
-console.log(kalenderwoche(Date.now()))
+// console.log(kalenderwoche(Date.now()))
+

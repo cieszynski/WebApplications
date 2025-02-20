@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <title>Test2</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="manifest" href="manifest.json" />
+
+    <style>
+        @font-face {
+            font-family: 'segoe-ui';
+            src: url('segoeuithis-webfont.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        *,
+        *::after,
+        *::before {
+            margin: 0;
+            box-sizing: border-box;
+        }
+    </style>
+
+    <template id="app-window" data-script="a b c">
+        <style>
+            :host {
+                border: 2px solid red;
+                position: fixed;
+                inset: 0;
+            }
+        </style>
+        <slot></slot>
+    </template>
+
+    <script>
+        document
+            .querySelectorAll('template')
+            .forEach(element => {
+
+                customElements.define(element.id, class extends HTMLElement {
+
+                    static observedAttributes = ["class"];
+
+                    constructor() {
+                        super()
+                            .attachShadow({ mode: "open" })
+                            .appendChild(element.content.cloneNode(true));
+                    }
+
+                    attributeChangedCallback(name, oldValue, newValue) {
+                        console.log(name, this.shadowRoot, this.classList)
+                    }
+                })
+            })
+    </script>
+</head>
+
+<body>
+    <app-window class="a b c">bla</app-window>
+
+</body>
+
+</html>

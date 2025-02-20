@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <title>Readline</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+        *,
+        *::after,
+        *::before {
+            margin: 0;
+            box-sizing: border-box;
+        }
+    </style>
+
+    <script src="readlines.js"></script>
+
+    <script>
+        async function getTheFile() {
+            // open file picker
+            const [fileHandle] = await window.showOpenFilePicker();
+            // get file contents
+            const fileData = await fileHandle.getFile();
+            return fileData;
+        }
+
+        async function doOpen() {
+            const fileData = await getTheFile();
+            const r = new ReadLine(fileData);
+            
+            for await (const line of r.lines()) {
+                console.log(line);
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <button onclick="doOpen()">Open</button>
+</body>
+
+</html>

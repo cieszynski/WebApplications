@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <title>EMRPlaner</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="manifest" href="manifest.json" />
+
+    <style>
+        @font-face {
+            font-family: 'segoe-ui';
+            src: url('segoeuithis-webfont.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        *,
+        *::after,
+        *::before {
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+    </style>
+
+
+</head>
+
+<body>
+
+    <app-window>
+        <template shadowrootmode="open">
+            <style>
+                :host {
+                    outline: 1px solid red;
+                }
+            </style>
+            <slot></slot>
+        </template>
+
+        <app-ribbon>
+            <template shadowrootmode="open">
+                <style>
+                    menu {
+                        border: 1px solid black;
+                        user-select: none;
+                        display: flex;
+                        list-style: none;
+                        height: 140px;
+                        position: relative;
+                        margin-block: 0;
+                        margin-inline: 0;
+                        padding-inline-start: 0;
+                        padding: 0 16px;
+                    }
+                </style>
+                <menu>
+                    <slot></slot>
+                </menu>
+            </template>
+
+            <app-ribbon-tab>
+                <template shadowrootmode="open">
+                    <style>
+                        li {
+                            border: 1px solid red;
+                            height: 25px;
+                            padding: 0 8px;
+                            font: 14px 'segoe-ui';
+                        }
+                    </style>
+                    <li>
+                        <slot></slot>
+                    </li>
+                </template>
+bla
+                <app-ribbon-group>
+                    <template shadowrootmode="open">
+                        <style>
+                            :host {
+                                position: absolute;
+                                inset: 28px 8px 0 8px;
+                                border: 3px solid yellow;
+                                display: block;
+                                height: 100px;
+                            }
+
+                            div {
+                                border: 1px solid blue;
+                            }
+                        </style>
+
+                        <div>
+                            <slot></slot>
+                        </div>
+                    </template>
+                    group
+                </app-ribbon-group>
+
+            </app-ribbon-tab>
+
+            <app-ribbon-tab>
+                blub
+                <app-ribbon-group>
+                    group2
+                </app-ribbon-group>
+            </app-ribbon-tab>
+
+        </app-ribbon>
+
+        test
+    </app-window>
+</body>
+
+</html>

@@ -1,0 +1,41 @@
+{
+    "short_name": "EMRPlaner",
+    "name": "EMR Planer",
+    "icons": [
+        {
+            "src": "favicon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "favicon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "./index.html",
+    "display": "standalone",
+    "theme_color": "#000000",
+    "background_color": "#ffffff",
+    "file_handlers": [
+        {
+            "action": "./index.html",
+            "accept": {
+                "text/plain": [
+                    ".bla"
+                ]
+            },
+            "icons": [
+                {
+                    "src": "bla-icon.png",
+                    "sizes": "256x256",
+                    "type": "image/png"
+                }
+            ],
+            "launch_type": "single-client"
+        }
+    ],
+    "display_override": [
+        "window-controls-overlay"
+    ]
+}
