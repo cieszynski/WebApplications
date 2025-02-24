@@ -1,4 +1,5 @@
 // https://gchristensen.github.io/posts/readline-in-es6/
+// https://developer.mozilla.org/en-US/docs/Web/API/WritableStreamDefaultWriter/write
 
 class ReadLine {
 
