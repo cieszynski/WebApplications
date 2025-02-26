@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <title>Bridges</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        *,
+        *::after,
+        *::before {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        article {
+            counter-reset: anzahl checked;
+            border: 1px solid black;
+            height: 108px;
+
+            &>div {
+                display: flex;
+                visibility: hidden;
+                align-items: end;
+                justify-content: center;
+                background-color: #ff0000ff;
+                position: absolute;
+                inset: 0 0 0 192px;
+
+                &>section {
+                    counter-increment: anzahl nummer;
+                    border: 1px solid blue;
+                    min-width: 64px;
+
+                    &>div {
+                        visibility: hidden;
+                        background-color: #00ff00ff;
+                        position: absolute;
+                        inset: 0 0 64px 0;
+                    }
+
+                    &>div:target {
+                        visibility: visible;
+                    }
+
+                    &>div:has(input:checked) {
+                        counter-increment: checked;
+                    }
+                }
+
+                &>section:has(div:target) {
+                    background-color: yellow;
+                }
+            }
+
+            &>div:has(* :target) {
+                visibility: visible;
+            }
+
+            &>header {
+                background-color: #00ff0022;
+                width: 192px;
+                height: 100%;
+
+                &>a {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                }
+
+                &>a:hover {
+                    background-color: #ddd;
+                }
+            }
+        }
+
+        article:has(* :target) {
+            &>header {
+                background-color: #00ff00;
+            }
+        }
+
+        body {
+            overflow: hidden;
+            display: flex;
+            height: 100%;
+        }
+
+        h2::before {
+            content: counter(checked);
+        }
+
+        h2::after {
+            content: counter(anzahl);
+        }
+
+        h3 {
+            font-size: 0;
+        }
+
+        h3::after {
+            font-size: 18px;
+            content: counter(nummer);
+        }
+
+        html {
+            height: 100%;
+        }
+
+        main {
+            counter-reset: nummer;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        menu {
+            border: 1px solid blue;
+            width: 64px;
+        }
+    </style>
+</head>
+
+<body>
+    <menu>
+        <li>menu</li>
+    </menu>
+    <main>
+        <article>
+            <div>
+                <section>
+                    <div id="a1">
+                        a
+                        <input type="checkbox">
+                        <input type="checkbox">
+                        <input type="checkbox">
+                    </div>
+                    <header>
+                        <a href="#a1">
+                            <h3>Frage</h3>
+                        </a>
+                    </header>
+                </section>
+                <section>
+                    <div id="a2">
+                        aa
+                        <input type="checkbox">
+                        <input type="checkbox">
+                        <input type="checkbox">
+                    </div>
+                    <header>
+                        <a href="#a2">
+                            <h3>Frage</h3>
+                        </a>
+                    </header>
+                </section>
+                <section>
+                    <div id="a3">
+                        aaa
+                    </div>
+                    <header>
+                        <a href="#a3">
+                            <h3>Frage</h3>
+                        </a>
+                    </header>
+                </section>
+                <section>
+                    <div id="a4">
+                        aaaa
+                    </div>
+                    <header>
+                        <a href="#a4">
+                            <h3>Frage</h3>
+                        </a>
+                    </header>
+                </section>
+            </div>
+            <header>
+                <a href="#a1">
+                    <h2>A</h2>
+                </a>
+            </header>
+        </article>
+        <article>
+            <div>
+                <section>
+                    <div id="b1">
+                        b
+                        <input type="checkbox">
+                        <input type="checkbox">
+                        <input type="checkbox">
+                    </div>
+                    <header>
+                        <a href="#b1">
+                            <h3>Frage</h3>
+                        </a>
+                    </header>
+                </section>
+                <section>
+                    <div id="b2">
+                        bb
+                        <input type="checkbox">
+                        <input type="checkbox">
+                        <input type="checkbox">
+                    </div>
+                    <header>
+                        <a href="#b2">
+                            <h3>Frage</h3>
+                        </a>
+                    </header>
+                </section>
+                <section>
+                    <div id="b3">
+                        bbb
+                        <input type="checkbox">
+                        <input type="checkbox">
+                        <input type="checkbox">
+                    </div>
+                    <header>
+                        <a href="#b3">
+                            <h3>Frage</h3>
+                        </a>
+                    </header>
+                </section>
+            </div>
+            <header>
+                <a href="#b1">
+                    <h2>B</h2>
+                </a>
+            </header>
+        </article>
+    </main>
+</body>
+
+</html>

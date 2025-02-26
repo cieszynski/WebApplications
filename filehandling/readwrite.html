@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <title>readwrite</title>
+        <meta charset="utf-8">
+    </head>
+
+    <body>
+        <button id="btOpen">Open</button>
+        <script>
+            let fileHandle;
+
+            btOpen.onclick = async (event) => {
+                fileHandle = await window.showOpenFilePicker();
+
+                console.dir(fileHandle)
+            }
+
+        </script>
+    </body>
+</html>
