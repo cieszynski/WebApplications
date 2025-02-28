@@ -183,14 +183,15 @@
 </head>
 
 <body>
-    <form>
+    <form id="data">
         <input type="radio" name="state" value="1">
         <input type="checkbox" name="state" value="2">
         <input type="radio" name="state" value="3">
+        <input hidden name="current">
         <menu>
             <li>menu</li>
             <li>
-                <time>:</time>
+                <time id="timer">:</time>
             </li>
         </menu>
         <main>
@@ -199,9 +200,9 @@
                     <section>
                         <div id="a1">
                             a
-                            <input type="checkbox">
-                            <input type="checkbox">
-                            <input type="checkbox">
+                            <input name="a1" type="checkbox">
+                            <input name="a1" type="checkbox">
+                            <input name="a1" type="checkbox">
                         </div>
                         <header>
                             <a href="#a1">
@@ -283,6 +284,7 @@
                             <input type="checkbox">
                             <input type="checkbox">
                             <input type="checkbox">
+                            <input name="bla">
                         </div>
                         <header>
                             <a href="#b3">
@@ -299,6 +301,70 @@
             </article>
         </main>
     </form>
+    <script>
+        timer.onanimationend = (event) => {
+            console.log(event)
+        }
+
+        timer.onanimationiteration = (event) => {
+            timer.getAnimations().forEach(animation => {
+                //console.log(animation)
+                //animation.pause()
+                // animation.currentTime = 20000
+                data.elements.current.value = animation.currentTime
+                //animation.play()
+                console.log(data.elements.current.value)
+            });
+
+            // timer.getAnimations()[1],currentTime=20000
+        }
+
+        const read = (element) => {
+            switch (element.type) {
+                case 'checkbox':
+                case 'radio':
+                    element.checked = localStorage.getItem(element.id) === 'true';
+                    break;
+                default:
+                    element.value = localStorage.getItem(element.id);
+            }
+        }
+
+        const write = (element) => {
+            switch (element.type) {
+                case 'checkbox':
+                case 'radio':
+                    localStorage.setItem(element.id, element.checked);
+                    break;
+                default:
+                    localStorage.setItem(element.id, element.value);
+            }
+        }
+
+        data.onchange = (event) => {
+            switch (event.target.type) {
+                case 'radio':
+                    Array.from(data.elements.namedItem(event.target.name))
+                        .forEach(element => write(element));
+                    break;
+                default:
+                    write(event.target)
+            }
+        }
+
+        Array.from(data.elements).forEach((element, idx, arr) => {
+            /* Beim erneuten Laden werden wieder die gleichen IDs vergeben: */
+            element.id = element.type.concat(idx)
+
+            /* Die Anzahl im LocalStorage ist gleich Anzahl der Inputs */
+            if (arr.length !== localStorage.length) {
+
+                write(element)
+            }
+
+            read(element);
+        })
+    </script>
 </body>
 
 </html>
