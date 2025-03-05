@@ -27,6 +27,13 @@
             syntax: '<integer>';
         }
 
+        @property --timer-rotation {
+            initial-value: 5deg;
+            syntax: "<angle>";
+            inherits: false;
+        }
+
+
         @keyframes minutes {
             to {
                 --timer-minutes: 60;
@@ -36,6 +43,12 @@
         @keyframes seconds {
             to {
                 --timer-seconds: 60;
+            }
+        }
+
+        @keyframes rotation {
+            to {
+                --timer-rotation: 360deg;
             }
         }
 
@@ -158,13 +171,25 @@
         time {
             counter-reset:
                 minutes var(--timer-minutes) seconds var(--timer-seconds);
-            animation-name: minutes, seconds;
-            animation-duration: 3600s, 60s;
-            animation-timing-function: steps(60), steps(60);
-            animation-direction: reverse, reverse;
-            animation-iteration-count: 1, 60;
+            animation-name: minutes, seconds, rotation;
+            animation-duration: 3600s, 60s, 60s;
+            animation-timing-function: steps(60), steps(60), steps(360);
+            animation-direction: reverse, reverse, reverse;
+            animation-iteration-count: 1, 60, infinite;
             animation-play-state: paused;
             animation-delay: 0s, 1s;
+
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: 
+                /* radial-gradient(white 0, white 20px, blue 20px),  */
+                
+                conic-gradient(red var(--timer-rotation), transparent var(--timer-rotation)),
+                conic-gradient(green 45deg, yellow 45deg)
         }
 
         input:checked~* time {
@@ -187,7 +212,8 @@
         <input type="radio" name="state" value="1">
         <input type="checkbox" name="state" value="2">
         <input type="radio" name="state" value="3">
-        <input hidden name="current">
+        <input name="currentTime" value="0">
+
         <menu>
             <li>menu</li>
             <li>
@@ -311,9 +337,10 @@
                 //console.log(animation)
                 //animation.pause()
                 // animation.currentTime = 20000
-                data.elements.current.value = animation.currentTime
+                data.elements.currentTime.value = animation.currentTime
+                write(data.elements.currentTime)
                 //animation.play()
-                console.log(data.elements.current.value)
+                console.log(data.elements.currentTime.value)
             });
 
             // timer.getAnimations()[1],currentTime=20000
@@ -348,7 +375,7 @@
                         .forEach(element => write(element));
                     break;
                 default:
-                    write(event.target)
+                    write(event.target);
             }
         }
 
@@ -363,6 +390,35 @@
             }
 
             read(element);
+        })
+
+        /* Nach dem Einlesen von localStorage die Animation positionieren */
+        timer.getAnimations().forEach(animation => {
+            console.log(data.elements.currentTime.value)
+            animation.currentTime = data.elements.currentTime.value;
+        });
+
+        document.addEventListener('keydown', event => {
+
+            if (event.ctrlKey && event.shiftKey) switch (event.key) {
+                case "F5":
+                    event.preventDefault();
+                    localStorage.clear();
+                    break;
+                default:
+                    console.log(event);
+            } else if (event.ctrlKey) switch (event.key) {
+                case "i":
+                case "u":
+                    event.preventDefault();
+                    break;
+                default:
+                    console.log(event);
+            } else switch (event.key) {
+                default:
+                    console.log(event);
+            }
+
         })
     </script>
 </body>
