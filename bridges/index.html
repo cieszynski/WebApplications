@@ -185,17 +185,35 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            background: 
+            background:
                 /* radial-gradient(white 0, white 20px, blue 20px),  */
-                
+
                 conic-gradient(red var(--timer-rotation), transparent var(--timer-rotation)),
                 conic-gradient(green 45deg, yellow 45deg)
         }
 
-        input:checked~* time {
+        dialog#dlgPaused {
+            width: 300px;
+            height: 200px;
+            margin: auto;
+        }
+
+        dialog#dlgPaused::backdrop {
+            backdrop-filter: blur(3px);
+        }
+
+
+        input#finished:checked~* label[for=running],
+        input#running:checked~* label[for=running] {
+            pointer-events: none;
+            color: #ddd;
+        }
+
+        input#running:checked~* time {
             animation-play-state: running;
             animation-delay: 0s, 0s;
         }
+
 
         time::before {
             content: counter(minutes, decimal-leading-zero);
@@ -209,13 +227,22 @@
 
 <body>
     <form id="data">
-        <input type="radio" name="state" value="1">
-        <input type="checkbox" name="state" value="2">
-        <input type="radio" name="state" value="3">
+        <input type="radio" name="state" id="running">
+        <input type="radio" name="state" id="paused">
+        <input type="radio" name="state" id="finished">
         <input name="currentTime" value="0">
 
         <menu>
-            <li>menu</li>
+            <li>
+                <label for="running">Start</label>
+            </li>
+            <li>
+                <input type="button" popovertarget="dlgPaused" value="pause">
+                <!-- <label for="paused">Pause</label> -->
+            </li>
+            <li>
+                <!-- <label for="finished">Beenden</label> -->
+            </li>
             <li>
                 <time id="timer">:</time>
             </li>
@@ -326,6 +353,10 @@
                 </header>
             </article>
         </main>
+        <dialog id="dlgPaused" popover="manual">
+            dlgPaused
+            <input type="button" popovertarget="dlgPaused" value="weiter">
+        </dialog>
     </form>
     <script>
         timer.onanimationend = (event) => {
@@ -373,6 +404,18 @@
                 case 'radio':
                     Array.from(data.elements.namedItem(event.target.name))
                         .forEach(element => write(element));
+
+                    switch (event.target.id) {
+                        case "running":
+                            console.log("running")
+                            break;
+                        case "paused":
+                            console.log("paused")
+                            break;
+                        case "finished":
+                            console.log("finished")
+                            break;
+                    }
                     break;
                 default:
                     write(event.target);
@@ -381,7 +424,8 @@
 
         Array.from(data.elements).forEach((element, idx, arr) => {
             /* Beim erneuten Laden werden wieder die gleichen IDs vergeben: */
-            element.id = element.type.concat(idx)
+            /* Bestimmte Elemente haben eine ID und es wird keine neue generiert */
+            element.id = element.id || element.type.concat(idx)
 
             /* Die Anzahl im LocalStorage ist gleich Anzahl der Inputs */
             if (arr.length !== localStorage.length) {
