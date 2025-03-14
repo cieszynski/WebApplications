@@ -130,8 +130,8 @@
         }
 
         body {
-            overflow: hidden;
             height: 100%;
+            overflow: clip;
             counter-set:
                 minutes var(--timer-minutes) seconds var(--timer-seconds);
             animation-name: minutes, seconds, rotation;
@@ -148,9 +148,10 @@
         }
 
         dialog {
-            width: 100vw;
-            height: 100vh;
-            position: absolute;
+            width: 100%;
+            height: 100%;
+            inset: 0;
+            position: fixed;
             /* UA-Stylesheet */
             border: none !important;
 
@@ -203,6 +204,24 @@
                         &>button:nth-child(2) {
                             margin-right: auto;
                         }
+                    }
+                }
+
+                &>[popover]:popover-open {
+                    opacity: 1;
+                }
+
+                &>[popover] {
+                    opacity: 0;
+                    transition:
+                        opacity 1.7s,
+                        overlay 1.7s allow-discrete,
+                        display 1.7s allow-discrete;
+                }
+
+                @starting-style {
+                    &>[popover]:popover-open {
+                        opacity: 0;
                     }
                 }
 
@@ -274,7 +293,8 @@
         }
 
         html {
-            height: 100%;
+            height: 100vh;
+            width: 100vw;
         }
 
         menu {
@@ -353,12 +373,12 @@
 
 <body>
     <form id="data">
-        <input type="radio" name="state" id="running">
+        <!--         <input type="radio" name="state" id="running">
         <input type="radio" name="state" id="paused">
         <input type="radio" name="state" id="finished">
-        <input name="currentTime" value="0">
+        <input name="currentTime" value="0"> -->
 
-        <menu>
+        <!--         <menu>
             <li>
                 <label for="running">Start</label>
             </li>
@@ -368,14 +388,15 @@
             </li>
             <li>
                 <input type="button" popovertarget="dlgFinishing" value="Beenden">
-                <!-- <label for="finished">Beenden</label> -->
+                <!-- <label for="finished">Beenden</label> - ->
             </li>
             <li>
                 <time id="timer">
                     <span class="time">:</span>
                 </time>
             </li>
-        </menu>
+        </menu> -->
+        <!--
         <main>
             <article>
                 <div>
@@ -482,9 +503,10 @@
                 </header>
             </article>
         </main>
+        -->
         <dialog id="start" open>
             <article>
-                <div style="display: flex">
+                <div style="display: flex;opacity: 1;">
                     <section>
                         <h5>welcome</h5>
                         <p>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <title>Bridges Dialog</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        *,
+        *::after,
+        *::before {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        dialog {
+            width: 100%;
+            height: 100%;
+            inset: 0;
+            position: fixed;
+            /* UA-Stylesheet */
+            border: none !important;
+
+            &[open] {
+                display: flex;
+                justify-content: center;
+            }
+
+            &>article {
+                display: flex;
+                align-items: end;
+                height: 100%;
+
+                &>section {
+                    inset: 0 0 40px 0;
+                    position: absolute;
+                    border: 1px solid black;
+                    width: 100%;
+                    height: calc(100% - 40px);
+
+                    &:popover-open {}
+
+                    &:popover-open+h2 {
+                        background-color: red;
+                    }
+                }
+            }
+        }
+
+        span.start::after {position: relative;
+            top: 0;
+            left: 0;
+            width: 24px;
+            height: 24px;
+            margin: 14px;
+            display: block;
+            background-color: black;
+            content: "";
+            clip-path: polygon(40% 0%, 0% 0%, 0% 100%, 40% 100%, 40% 0%, 60% 0%, 100% 0%, 100% 100%, 60% 100%, 60% 0%);
+        }
+    </style>
+</head>
+
+<body>
+    <dialog open>
+        <article>
+            <section>
+                <h3>h3</h3>
+                <p title="pause" style="width: 100px; height: 100px; position: relative;">welcome</p>
+                <button type="button" popovertarget="intro1"><span class="start"></span></button>
+            </section>
+            <section id="intro1" popover="manual">
+                <h3>h3</h3>
+                <p>content 1</p>
+                <button type="button" popovertarget="intro2">weiter</button>
+            </section>
+            <h2>h2</h2>
+        </article>
+        <article>
+            <section id="intro2" popover="manual">
+                <h3>h3</h3>
+                <p>content 2</p>
+                <button type="button" popovertarget="intro2">zurück</button>
+                <button type="button" popovertarget="intro3">weiter</button>
+            </section>
+            <h2>h2</h2>
+        </article>
+        <article>
+            <section id="intro3" popover="manual">
+                <h3>h3</h3>
+                <p>content 3</p>
+                <button type="button" popovertarget="intro3">zurück</button>
+            </section>
+            <h2>h2</h2>
+        </article>
+    </dialog>
+</body>
+
+</html>
