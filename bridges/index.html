@@ -17,20 +17,20 @@
 
         @property --timer-minutes {
             initial-value: 0;
-            inherits: false;
+            inherits: true;
             syntax: '<integer>';
         }
 
         @property --timer-seconds {
             initial-value: 0;
-            inherits: false;
+            inherits: true;
             syntax: '<integer>';
         }
 
         @property --timer-rotation {
-            initial-value: 5deg;
+            initial-value: 0deg;
+            inherits: true;
             syntax: "<angle>";
-            inherits: false;
         }
 
 
@@ -52,76 +52,202 @@
             }
         }
 
-        article {
-            counter-reset: anzahl checked;
-            border: 1px solid black;
-            height: 108px;
+        main {
+            counter-reset: nummer;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
 
-            &>div {
-                display: flex;
-                visibility: hidden;
-                align-items: end;
-                justify-content: center;
-                background-color: #ff0000ff;
-                position: absolute;
-                inset: 0 0 0 192px;
+            &>article {
+                /* Gruppe von Fragen */
+                counter-reset: anzahl checked;
+                border: 1px solid black;
+                height: 108px;
 
-                &>section {
-                    counter-increment: anzahl nummer;
-                    border: 1px solid blue;
-                    min-width: 64px;
+                &>div {
+                    display: flex;
+                    visibility: hidden;
+                    align-items: end;
+                    justify-content: center;
+                    background-color: #ff0000ff;
+                    position: absolute;
+                    inset: 0 0 0 192px;
 
-                    &>div {
-                        visibility: hidden;
-                        background-color: #00ff00ff;
-                        position: absolute;
-                        inset: 0 0 64px 0;
+                    &>section {
+                        /* Frage */
+                        counter-increment: anzahl nummer;
+                        border: 1px solid blue;
+                        min-width: 64px;
+
+                        &>div {
+                            visibility: hidden;
+                            background-color: #00ff00ff;
+                            position: absolute;
+                            inset: 0 0 64px 0;
+                        }
+
+                        &>div:target {
+                            visibility: visible;
+                        }
+
+                        &>div:has(input:checked) {
+                            counter-increment: checked;
+                        }
                     }
 
-                    &>div:target {
-                        visibility: visible;
-                    }
-
-                    &>div:has(input:checked) {
-                        counter-increment: checked;
+                    &>section:has(div:target) {
+                        background-color: yellow;
                     }
                 }
 
-                &>section:has(div:target) {
-                    background-color: yellow;
+                &>div:has(* :target) {
+                    visibility: visible;
                 }
-            }
 
-            &>div:has(* :target) {
-                visibility: visible;
-            }
-
-            &>header {
-                background-color: #00ff0022;
-                width: 192px;
-                height: 100%;
-
-                &>a {
-                    display: block;
-                    width: 100%;
+                &>header {
+                    background-color: #00ff0022;
+                    width: 192px;
                     height: 100%;
-                }
 
-                &>a:hover {
-                    background-color: #ddd;
+                    &>a {
+                        display: block;
+                        width: 100%;
+                        height: 100%;
+                    }
+
+                    &>a:hover {
+                        background-color: #ddd;
+                    }
                 }
             }
-        }
 
-        article:has(* :target) {
-            &>header {
-                background-color: #00ff00;
+            &>article:has(* :target) {
+                &>header {
+                    background-color: #00ff00;
+                }
             }
         }
 
         body {
             overflow: hidden;
             height: 100%;
+            counter-set:
+                minutes var(--timer-minutes) seconds var(--timer-seconds);
+            animation-name: minutes, seconds, rotation;
+            animation-duration: 3600s, 60s, 60s;
+            animation-timing-function: steps(60), steps(60), steps(360);
+            animation-direction: reverse, reverse, reverse;
+            animation-iteration-count: 1, 60, infinite;
+            /* animation-play-state: paused; */
+            animation-delay: 0s, 1s;
+        }
+
+        body:has(dialog[open]) {
+            animation-play-state: paused;
+        }
+
+        dialog {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            /* UA-Stylesheet */
+            border: none !important;
+
+            &[open] {
+                display: flex;
+                justify-content: center;
+            }
+
+            &>article {
+                display: flex;
+                align-items: end;
+                height: 100%;
+
+                &>div {
+                    flex-direction: column;
+                    /* UA-Stylesheet */
+                    border: none !important;
+                    background-color: transparent;
+                    /* UA-Stylesheet */
+                    position: absolute;
+                    inset: 0 0 40px 0;
+                    width: 100%;
+                    height: 100%;
+
+                    &>section {
+                        background-color: #aaa;
+                        margin-bottom: 40px;
+                        flex: 1;
+                    }
+
+                    &>nav {
+                        width: 100%;
+                        height: 40px;
+                        display: flex;
+                        position: absolute;
+                        bottom: 0;
+                        /* align 1 or 2 buttons */
+                        /* one button ever right side */
+                        flex-direction: row-reverse;
+
+                        &>button {
+                            border-radius: 20px;
+                            padding: 0 10px;
+                            border: none;
+                            margin: 8px;
+                            height: 24px;
+                        }
+
+                        /* align 2nd button left, if 2 buttons */
+                        &>button:nth-child(2) {
+                            margin-right: auto;
+                        }
+                    }
+                }
+
+                &>div:popover-open {
+                    display: flex;
+                }
+
+                &>h4 {
+                    background-color: #ddd;
+                    border-radius: 50%;
+                    font-size: 0;
+                    margin: 8px;
+                    height: 24px;
+                    width: 24px;
+                }
+
+                &>div:popover-open+h4 {
+                    background-color: #00ff00;
+                }
+            }
+
+            &>article:has(~article>div:popover-open) {
+                &>div {
+                    &>nav {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        #dlgWelcome {
+            width: 100vw;
+            height: 100vh;
+            background-color: #ffffffaa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            &>fieldset {
+                display: flex;
+                flex-direction: column;
+                width: 300px;
+                height: 200px;
+                background-color: #fff;
+            }
         }
 
         form {
@@ -151,14 +277,6 @@
             height: 100%;
         }
 
-        main {
-            counter-reset: nummer;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-        }
-
         menu {
             list-style: none;
             border: 1px solid blue;
@@ -166,19 +284,7 @@
             animation-play-state: paused;
         }
 
-
-
         time {
-            counter-reset:
-                minutes var(--timer-minutes) seconds var(--timer-seconds);
-            animation-name: minutes, seconds, rotation;
-            animation-duration: 3600s, 60s, 60s;
-            animation-timing-function: steps(60), steps(60), steps(360);
-            animation-direction: reverse, reverse, reverse;
-            animation-iteration-count: 1, 60, infinite;
-            animation-play-state: paused;
-            animation-delay: 0s, 1s;
-
             width: 48px;
             height: 48px;
             display: flex;
@@ -198,8 +304,22 @@
             margin: auto;
         }
 
-        dialog#dlgPaused::backdrop {
+        dialog::backdrop {
+            background-color: #ddddddaa;
             backdrop-filter: blur(3px);
+        }
+
+        input#running:checked~* time {
+            animation-play-state: running;
+            animation-delay: 0s, 0s;
+        }
+
+        dialog#dlgFinishing:popover-open~* time {
+            animation-play-state: paused;
+        }
+
+        dialog:popover-open~* {
+            pointer-events: none;
         }
 
 
@@ -209,18 +329,24 @@
             color: #ddd;
         }
 
-        input#running:checked~* time {
-            animation-play-state: running;
-            animation-delay: 0s, 0s;
-        }
-
-
-        time::before {
+        .time::before {
             content: counter(minutes, decimal-leading-zero);
         }
 
-        time::after {
-            content: counter(seconds, decimal-leading-zero);
+        .time::after {
+            content: counter(seconds, decimal-leading-zero) ":" counter(minutes, decimal-leading-zero);
+        }
+
+        input:required {
+            background-color: red;
+        }
+
+        input:required:valid {
+            background-color: green;
+        }
+
+        body:has(input:required:valid) * button#login {
+            background-color: green;
         }
     </style>
 </head>
@@ -238,13 +364,16 @@
             </li>
             <li>
                 <input type="button" popovertarget="dlgPaused" value="pause">
-                <!-- <label for="paused">Pause</label> -->
+                <label for="paused">Pause</label>
             </li>
             <li>
+                <input type="button" popovertarget="dlgFinishing" value="Beenden">
                 <!-- <label for="finished">Beenden</label> -->
             </li>
             <li>
-                <time id="timer">:</time>
+                <time id="timer">
+                    <span class="time">:</span>
+                </time>
             </li>
         </menu>
         <main>
@@ -353,18 +482,55 @@
                 </header>
             </article>
         </main>
-        <dialog id="dlgPaused" popover="manual">
-            dlgPaused
-            <input type="button" popovertarget="dlgPaused" value="weiter">
+        <dialog id="start" open>
+            <article>
+                <div style="display: flex">
+                    <section>
+                        <h5>welcome</h5>
+                        <p>
+                            <input type="text" required>
+                        </p>
+                    </section>
+                    <nav>
+                        <button id="login" type="button" popovertarget="intro1">Anmelden</button>
+                    </nav>
+                </div>
+                <h4 style="background-color: #00ff00;">Anmeldung</h4>
+            </article>
+            <article>
+                <div id="intro1" popover="manual">
+                    <section>
+                        <h5>intro1</h5>
+                        <p>bla</p>
+                    </section>
+                    <nav>
+                        <button type="button" popovertarget="intro2">Weiter</button>
+                    </nav>
+                </div>
+                <h4>Intro 1</h4>
+            </article>
+            <article>
+                <div id="intro2" popover="manual">
+                    <section>
+                        <h5>intro2</h5>
+                        <p>bla</p>
+                    </section>
+                    <nav>
+                        <button type="button" popovertarget="intro2">Weiter</button>
+                        <button type="button" popovertarget="intro2">Zurück</button>
+                    </nav>
+                </div>
+                <h4>Intro 2</h4>
+            </article>
         </dialog>
     </form>
     <script>
-        timer.onanimationend = (event) => {
+        document.body.onanimationend = (event) => {
             console.log(event)
         }
 
-        timer.onanimationiteration = (event) => {
-            timer.getAnimations().forEach(animation => {
+        document.body.onanimationiteration = (event) => {
+            document.body.getAnimations().forEach(animation => {
                 //console.log(animation)
                 //animation.pause()
                 // animation.currentTime = 20000
@@ -383,6 +549,9 @@
                 case 'radio':
                     element.checked = localStorage.getItem(element.id) === 'true';
                     break;
+                case "button":
+                    /* do nothing */
+                    break;
                 default:
                     element.value = localStorage.getItem(element.id);
             }
@@ -394,9 +563,16 @@
                 case 'radio':
                     localStorage.setItem(element.id, element.checked);
                     break;
+                case "button":
+                    /* do nothing */
+                    break;
                 default:
                     localStorage.setItem(element.id, element.value);
             }
+        }
+
+        data.onclick = (event) => {
+            console.log(event)
         }
 
         data.onchange = (event) => {
@@ -416,6 +592,9 @@
                             console.log("finished")
                             break;
                     }
+                    break;
+                case "button":
+                    /* do nothing */
                     break;
                 default:
                     write(event.target);
@@ -437,7 +616,7 @@
         })
 
         /* Nach dem Einlesen von localStorage die Animation positionieren */
-        timer.getAnimations().forEach(animation => {
+        document.body.getAnimations().forEach(animation => {
             console.log(data.elements.currentTime.value)
             animation.currentTime = data.elements.currentTime.value;
         });
