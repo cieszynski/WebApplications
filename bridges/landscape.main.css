@@ -1,0 +1,98 @@
+main {
+    flex: 1;
+    counter-reset: number;
+    position: relative;
+    background-color: #ddd;
+    height: 100%;
+
+    &>article {
+        counter-reset: count checked;
+
+        /* Group of questions */
+        &>a {
+            display: flex;
+            background-color: #aaa;
+            height: 64px;
+            width: 192px;
+
+            &:hover {
+                border: 2px solid #eee;
+            }
+        }
+
+        &:has(* :target)>a {
+            border: 2px solid #999;
+        }
+
+        &>div {
+            /* Question */
+            visibility: hidden;
+            position: absolute;
+            inset: 0 0 0 192px;
+            display: flex;
+            align-items: end;
+            justify-content: center;
+
+            &:has(* :target) {
+                visibility: visible;
+            }
+
+            &>section {
+
+                &>div {
+                    /* counter has to incr here! */
+                    counter-increment: count number;
+                    visibility: hidden;
+                    background-color: #eee;
+                    position: absolute;
+                    inset: 0 0 40px 0;
+
+                    &:target {
+                        visibility: visible;
+
+                        &+a {
+                            color: yellow;
+                        }
+                    }
+                }
+
+                &>a {
+                    width: 28px;
+                    height: 28px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: #333;
+                    color: #eee;
+                    border-radius: 50%;
+                    margin: 4px;
+                }
+
+                &:has(input:checked) {
+                    counter-increment: checked;
+                }
+            }
+
+            & h3 {
+                font-size: 0;
+            }
+
+            & h3::after {
+                font-size: 18px;
+                content: counter(number);
+            }
+        }
+
+        & h2::before {
+            content: counter(checked);
+        }
+
+        & h2::after {
+            content: counter(count);
+        }
+    }
+}
+
+menu {
+    width: 64px;
+}

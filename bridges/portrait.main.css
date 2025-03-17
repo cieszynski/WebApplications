@@ -1,0 +1,23 @@
+form {
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+
+    &>article {
+        display: flex;
+        flex-direction: column;
+        &>a {
+            order: 1;
+        }
+
+        &>div {
+            order: 2;
+        }
+    }
+}
+
+menu {
+    height: 32px;
+}
