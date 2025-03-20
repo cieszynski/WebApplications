@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <title>Bridges Main</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="portrait.main.css" rel="stylesheet" media="(orientation: portrait)" />
+    <link href="landscape.main.css" rel="stylesheet" media="(orientation: landscape)" />
+    <style>
+        *,
+        *::after,
+        *::before {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            list-style-type: none;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        body {
+            height: 100%;
+        }
+
+        form {
+            display: flex;
+            height: 100%;
+
+/*             @media (orientation: portrait) {
+                flex-direction: column;
+            } */
+        }
+
+        html {
+            height: 100%;
+        }
+
+
+
+    </style>
+</head>
+
+<body>
+    <form id="data">
+        <menu>
+            <li>Start</li>
+        </menu>
+        <main>
+            <article>
+                <div>
+                    <section>
+                        <div id="a1">section A1</div>
+                        <a href="#a1">
+                            <h3>Frage</h3>
+                        </a>
+                    </section>
+                    <section>
+                        <div id="a2">section A2</div>
+                        <a href="#a2">
+                            <h3>Frage</h3>
+                        </a>
+                    </section>
+                    <section>
+                        <div id="a3">section A3</div>
+                        <a href="#a3">
+                            <h3>Frage</h3>
+                        </a>
+                    </section>
+                </div>
+                <a href="#a1">
+                    <h2>header A</h2>
+                </a>
+            </article>
+            <article>
+                <div>
+                    <section>
+                        <div id="b1">section B1</div>
+                        <a href="#b1">
+                            <h3>Frage</h3>
+                        </a>
+                    </section>
+                    <section>
+                        <div id="b2">section B2</div>
+                        <a href="#b2">
+                            <h3>hb2</h3>
+                        </a>
+                    </section>
+                    <section>
+                        <div id="b3">section B3
+                            <input type="checkbox">
+                        </div>
+                        <a href="#b3">
+                            <h3>hb3</h3>
+                        </a>
+                    </section>
+                </div>
+                <a href="#b1">
+                    <h2>header B</h2>
+                </a>
+            </article>
+        </main>
+    </form>
+</body>
