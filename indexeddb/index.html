@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <title>indexeddb</title>
+    <meta charset="utf-8">
+
+    <script>
+        class database {
+
+            #db;
+
+            constructor(db) {
+                console.assert(db instanceof IDBDatabase);
+
+                this.#db = db;
+            }
+
+            static open(name, options) {
+                console.assert(typeof name === "string");
+                console.assert(typeof options === "object");
+
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open(name, Object(options).version);
+
+                    request.onupgradeneeded = (event) => Object(options)?.upgrade(event.target.result, event.newVersion);
+                    request.onsuccess = () => { resolve(new database(request.result)); };
+                    request.onerror = () => { reject(request.error); };
+                })
+            }
+
+            add(store, item) {
+                console.assert(typeof store === "string");
+                console.assert(typeof item === "object");
+
+                return new Promise((resolve, reject) => {
+                    const transaction = this.#db.transaction(store, "readwrite");
+
+                    transaction.onerror = () => { reject(transaction.error); };
+                    transaction.objectStore(store).add(item).onsuccess = (request) => {
+                        resolve(request.target.result); // new key
+                    };
+                });
+            }
+
+            put(store, key, item) {
+                console.assert(typeof store === "string");
+                console.assert(typeof item === "object");
+                
+                return new Promise((resolve, reject) => {
+                    const transaction = this.#db.transaction(store, "readwrite");
+
+                    transaction.onerror = () => { reject(transaction.error); };
+                    transaction.objectStore(store).put(item, key).onsuccess = (request) => {
+                        resolve(request.target.result); // key
+                    };
+                });
+            }
+
+            remove(store, key) {
+                console.assert(typeof store === "string");
+
+                return new Promise((resolve, reject) => {
+                    const transaction = this.#db.transaction(store, "readwrite");
+
+                    transaction.onerror = () => { reject(transaction.error); };
+                    transaction.objectStore(store).delete(key).onsuccess = (request) => {
+                        resolve(request);
+                    };
+                });
+            }
+
+            get(store, key) {
+                console.assert(typeof store === "string");
+
+                return new Promise((resolve, reject) => {
+                    const transaction = this.#db.transaction(store);
+
+                    transaction.onerror = () => { reject(transaction.error); };
+                    transaction.objectStore(store).get(key).onsuccess = (request) => {
+                        resolve(request.target.result); // value
+                    };
+                });
+            }
+        }
+    </script>
+
+</head>
+
+<body>
+    <script>
+        async function run() {
+            const db = await database.open("db1", {
+                version: 1,
+                upgrade: (db, version) => {
+                    switch (version) {
+                        default:
+                            db.createObjectStore("store1", { autoIncrement: true })
+                    }
+                }
+            })
+
+            //await db.add("store1", { key: 2, a: 1 })
+            //let s = await db.add("store1", { key: 2, a: 1 })
+            //console.log(db, s)
+            let d = await db.put("store1", 1, {b:1})
+            console.log(db, d)
+        }
+
+        run() 
+    </script>
+</body>
+
+</html>
