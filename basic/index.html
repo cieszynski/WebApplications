@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <title>Basic</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        *,
+        *::after,
+        *::before {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            /* prevents addressbar movement */
+            overflow: hidden;
+            height: 100%;
+        }
+
+        html {
+            /* prevents addressbar movement */
+            overflow: hidden;
+            height: 100%;
+        }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="main.basic.css">
+</head>
+
+<body>
+    <main>
+        <h1>h1</h1>
+        <article>
+            <section id="s1">
+                <article>
+                    <section id="s11">
+                        section11
+                    </section>
+                    <a href="#s11">
+                        <h3>h3a1</h3>
+                    </a>
+                </article>
+                <article>
+                    <section id="s12">
+                        section12
+                    </section>
+                    <a href="#s12">
+                        <h3>h3a2</h3>
+                    </a>
+                </article>
+            </section>
+            <a href="#s1">
+                <h2>h2a</h2>
+            </a>
+        </article>
+        <article>
+            <section id="s2">
+                section2
+            </section>
+            <a href="#s2">
+                <h2>h2b</h2>
+            </a>
+        </article>
+        <article>
+            <section id="s3">
+                section3
+                <article id="s31">
+                    article
+                </article>
+            </section>
+            <a href="#s3">
+                <h2>h2c</h2>
+            </a>
+        </article>
+    </main>
+</body>
+
+</html>

@@ -1,0 +1,167 @@
+main {
+    position: relative;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+
+    /* if no :target then show first-of-type */
+    &:not(:has(:target))>article:first-of-type>section:first-of-type {
+        display: flex;
+    }
+
+    /* navbar button */
+    &>article {
+
+        &>a {
+            border: 1px solid #ddd;
+            flex-direction: column;
+            justify-content: end;
+            align-items: center;
+            display: flex;
+            width: 80px;
+
+            &>h2 {
+                font-size: 16px;
+            }
+        }
+
+        /* navigation destination */
+        &>section {
+
+            &:target,
+            &:has(:target) {
+                display: flex;
+            }
+
+            display: none;
+            position: absolute;
+            background-color: #ddd;
+
+
+            /* list view item */
+            &>article {
+                &>a {
+                    display: block;
+                    height: 100%;
+
+                    &>h3 {
+                        font-size: 16px;
+                    }
+                }
+            }
+        }
+    }
+
+    &>h1 {
+        font-size: 0;
+    }
+
+    /* shows list view items or view content */
+    @media (orientation: portrait) {
+        flex-direction: row;
+        align-items: end;
+        gap: 8px;
+
+        /* navbar button */
+        &>article {
+            &>a {
+                height: 80px;
+            }
+
+            /* navigation destination */
+            &>section {
+
+                &:target,
+                &:has(:target) {
+                    display: flex;
+                }
+
+                display: none;
+                inset: 0 0 80px 0;
+                flex-direction: column;
+
+                /* list view item */
+                &>article {
+                    height: 120px;
+                    border: 1px solid blue;
+
+                    &a> {
+                        height: 100%;
+                    }
+
+                    /* list view content */
+                    &>section {
+
+                        display: none;
+
+                        &:target,
+                        &:has(:target) {
+                            display: block;
+                            opacity: 1;
+                            scale: 1;
+
+                            @starting-style {
+                                opacity: 0;
+                                scale: .7;
+                            }
+                        }
+                        
+                        background-color: #777;
+                        position: absolute;
+                        inset: 0;
+                        scale: .7;
+                        opacity: 0;
+                        transition: opacity .1s ease-in,
+                        scale .1s ease-in,
+                        display .1s allow-discrete;
+                    }
+                }
+            }
+        }
+    }
+
+    /* shows list view items and view content together*/
+    @media (orientation: landscape) {
+        flex-direction: column;
+        align-items: start;
+        gap: 12px;
+
+        /* navbar button */
+        &>article {
+            &>a {
+                height: 56px;
+            }
+
+            /* navigation destination */
+            &>section {
+
+                /* if no :target then show first-of-type */
+                &:not(:has(:target))>article:first-of-type>section:first-of-type {
+                    display: flex;
+                }
+
+                flex-direction: column;
+                inset: 0 0 0 80px;
+
+                /* list view item */
+                &>article {
+                    border: 1px solid red;
+
+                    /* list view content */
+                    &>section {
+
+                        &:target,
+                        &:has(:target) {
+                            display: flex;
+                        }
+
+                        display: none;
+                        background-color: #777;
+                        position: absolute;
+                        inset: 0 0 0 30%;
+                    }
+                }
+            }
+        }
+    }
+}
