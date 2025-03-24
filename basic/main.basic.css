@@ -62,41 +62,29 @@ main {
         align-items: end;
         gap: 8px;
 
-        /* navbar button */
         &>article {
             &>a {
                 height: 80px;
             }
 
-            /* navigation destination */
             &>section {
 
-                &:target,
-                &:has(:target) {
-                    display: flex;
-                }
-
-                display: none;
-                inset: 0 0 80px 0;
                 flex-direction: column;
+                inset: 0 0 80px 0;
 
-                /* list view item */
                 &>article {
-                    height: 120px;
                     border: 1px solid blue;
 
-                    &a> {
-                        height: 100%;
+                    &>a {
+                        height: 120px;
                     }
 
-                    /* list view content */
                     &>section {
-
-                        display: none;
 
                         &:target,
                         &:has(:target) {
-                            display: block;
+                            transition-timing-function: ease-out;
+                            display: flex;
                             opacity: 1;
                             scale: 1;
 
@@ -105,15 +93,17 @@ main {
                                 scale: .7;
                             }
                         }
-                        
+
                         background-color: #777;
                         position: absolute;
-                        inset: 0;
-                        scale: .7;
+                        display: none;
                         opacity: 0;
-                        transition: opacity .1s ease-in,
-                        scale .1s ease-in,
-                        display .1s allow-discrete;
+                        scale: .7;
+                        inset: 0;
+                        transition-property: opacity, scale, display;
+                        transition-timing-function: ease-in;
+                        transition-duration: 0.15s;
+                        transition-behavior: allow-discrete;
                     }
                 }
             }
@@ -147,6 +137,12 @@ main {
                 &>article {
                     border: 1px solid red;
 
+                    &>a {
+                        height: 100px;
+                        width: min(30%, 300px);
+                        border: 10px solid yellow;
+                    }
+
                     /* list view content */
                     &>section {
 
@@ -158,7 +154,7 @@ main {
                         display: none;
                         background-color: #777;
                         position: absolute;
-                        inset: 0 0 0 30%;
+                        inset: 0 0 0 min(30%, 300px);
                     }
                 }
             }
