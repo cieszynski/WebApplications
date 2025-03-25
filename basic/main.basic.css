@@ -1,160 +1,262 @@
-main {
-    position: relative;
-    display: flex;
-    height: 100%;
-    justify-content: center;
+@charset "UTF-8";
 
-    /* if no :target then show first-of-type */
-    &:not(:has(:target))>article:first-of-type>section:first-of-type {
+@font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 400;
+    src: url("/fonts/roboto-regular-webfont.woff2") format('woff2');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 500;
+    src: url("/fonts/roboto-medium-webfont.woff2") format('woff2');
+    font-display: swap;
+}
+
+@layer basic {
+    :root {
+        /* navbar button active */
+        --color-on-surface: #1D1B20;
+        /* navbar button inactive */
+        --color-on-surface-variant: #49454F;
+        /* navbar button Active indicator */
+        --color-secondary-container: #E8DEF8;
+
+
+        --typeface-brand: Roboto;
+        --typeface-plain: Roboto;
+
+        --typescale-label-small-font: 500 11px/16px var(--typeface-brand);
+        --typescale-label-small-track: .5px;
+
+        --typescale-label-medium-font: 500 12px/16px var(--typeface-brand);
+        --typescale-label-medium-track: .5px;
+
+        --header-small: 64px;
+        --header-medium: 112px;
+        --header-large: 152px;
+    }
+
+    main {
+
+        --navbar-button-color: var(--color-on-surface-variant);
+        --navbar-button-active-indicator-color: var(--color-secondary-container);
+        --navbar-button-active-indicator-width: 32px;
+        --navbar-button-active-indicator-opacity: 0;
+
+        position: relative;
         display: flex;
-    }
+        height: 100%;
+        justify-content: center;
 
-    /* navbar button */
-    &>article {
-
-        &>a {
-            border: 1px solid #ddd;
-            flex-direction: column;
-            justify-content: end;
-            align-items: center;
+        /* if no :target then show first-of-type */
+        &:not(:has(:target))>article:first-of-type>section:first-of-type {
             display: flex;
-            width: 80px;
-
-            &>h2 {
-                font-size: 16px;
-            }
         }
 
-        /* navigation destination */
-        &>section {
-
-            &:target,
-            &:has(:target) {
-                display: flex;
-            }
-
-            display: none;
-            position: absolute;
-            background-color: #ddd;
-
-
-            /* list view item */
-            &>article {
-                &>a {
-                    display: block;
-                    height: 100%;
-
-                    &>h3 {
-                        font-size: 16px;
-                    }
-                }
-            }
+        /* if no :target then 1st navbar button active */
+        &:not(:has(:target))>article:first-of-type>a {
+            --navbar-button-color: var(--color-on-surface);
+            --navbar-button-icon: var(--url-active-icon-mask);
+            --navbar-button-active-indicator-width: 64px;
+            --navbar-button-active-indicator-opacity: 1;
         }
-    }
 
-    &>h1 {
-        font-size: 0;
-    }
-
-    /* shows list view items or view content */
-    @media (orientation: portrait) {
-        flex-direction: row;
-        align-items: end;
-        gap: 8px;
-
+        /* navbar button & navigation destination*/
         &>article {
-            &>a {
-                height: 80px;
+
+            &:has(:target)>a {
+                --navbar-button-color: var(--color-on-surface);
+                --navbar-button-icon: var(--url-active-icon-mask);
+                --navbar-button-active-indicator-width: 64px;
+                --navbar-button-active-indicator-opacity: 1;
             }
 
-            &>section {
-
+            /* navbar button */
+            &>a {
+                position: relative;
+                border: 1px solid #ddd;
                 flex-direction: column;
-                inset: 0 0 80px 0;
+                justify-content: end;
+                align-items: center;
+                display: flex;
+                width: 80px;
+                color: var(--navbar-button-color);
 
-                &>article {
-                    border: 1px solid blue;
+                --navbar-button-icon: var(--url-inactive-icon-mask);
 
-                    &>a {
-                        height: 120px;
-                    }
-
-                    &>section {
-
-                        &:target,
-                        &:has(:target) {
-                            transition-timing-function: ease-out;
-                            display: flex;
-                            opacity: 1;
-                            scale: 1;
-
-                            @starting-style {
-                                opacity: 0;
-                                scale: .7;
-                            }
-                        }
-
-                        background-color: #777;
-                        position: absolute;
-                        display: none;
-                        opacity: 0;
-                        scale: .7;
-                        inset: 0;
-                        transition-property: opacity, scale, display;
-                        transition-timing-function: ease-in;
-                        transition-duration: 0.15s;
-                        transition-behavior: allow-discrete;
-                    }
+                &>h2 {
+                    font: var(--typescale-label-medium-font);
+                    letter-spacing: var(--typescale-label-medium-track);
                 }
             }
-        }
-    }
 
-    /* shows list view items and view content together*/
-    @media (orientation: landscape) {
-        flex-direction: column;
-        align-items: start;
-        gap: 12px;
+            &>a::after {
+                content: "";
+                position: absolute;
+                margin: auto;
+                inset: 0;
+                mask-size: 24px;
+                mask-repeat: no-repeat;
+                mask-position: center;
+                mask-image: var(--navbar-button-icon);
+                background-color: currentColor;
+            }
 
-        /* navbar button */
-        &>article {
-            &>a {
-                height: 56px;
+            /* Active indicator */
+            &>a::before {
+                transition: width .1s, opacity .1s;
+                content: "";
+                position: absolute;
+                margin: auto;
+                top: 12px;
+                width: var(--navbar-button-active-indicator-width);
+                height: 32px;
+                border-radius: 16px;
+                background-color: var(--navbar-button-active-indicator-color);
+                opacity: var(--navbar-button-active-indicator-opacity);
+            }
+
+            &>a:hover::before {
+                --navbar-button-active-indicator-color: var();
+                --navbar-button-active-indicator-width: 64px;
+                --navbar-button-active-indicator-opacity: 1;
             }
 
             /* navigation destination */
             &>section {
+                overflow: clip scroll;
 
-                /* if no :target then show first-of-type */
-                &:not(:has(:target))>article:first-of-type>section:first-of-type {
+                &:target,
+                &:has(:target) {
                     display: flex;
                 }
 
-                flex-direction: column;
-                inset: 0 0 0 80px;
+                display: none;
+                position: absolute;
+                background-color: #ddd;
+
 
                 /* list view item */
                 &>article {
-                    border: 1px solid red;
-
                     &>a {
-                        height: 100px;
-                        width: min(30%, 300px);
-                        border: 10px solid yellow;
+                        display: block;
+                        height: 100%;
+
+                        &>h3 {
+                            font-size: 16px;
+                        }
                     }
+                }
+            }
+        }
 
-                    /* list view content */
-                    &>section {
+        /* shows list view items or view content */
+        @media (orientation: portrait) {
+            flex-direction: row;
+            align-items: end;
+            gap: 8px;
 
-                        &:target,
-                        &:has(:target) {
-                            display: flex;
+            &>article {
+                &>a {
+                    height: 80px;
+                }
+
+                &>section {
+
+                    flex-direction: column;
+                    inset: 0 0 80px 0;
+
+                    &>article {
+                        border: 1px solid blue;
+
+                        &>a {
+                            height: 120px;
                         }
 
-                        display: none;
-                        background-color: #777;
-                        position: absolute;
-                        inset: 0 0 0 min(30%, 300px);
+                        &>section {
+
+                            &:target,
+                            &:has(:target) {
+                                transition-timing-function: ease-out;
+                                display: flex;
+                                opacity: 1;
+                                scale: 1;
+
+                                @starting-style {
+                                    opacity: 0;
+                                    scale: .7;
+                                }
+                            }
+
+                            background-color: #777;
+                            position: absolute;
+                            display: none;
+                            opacity: 0;
+                            scale: .7;
+                            inset: 0;
+                            transition-property: opacity,
+                            scale,
+                            display;
+                            transition-timing-function: ease-in;
+                            transition-duration: 0.15s;
+                            transition-behavior: allow-discrete;
+                        }
+                    }
+                }
+            }
+        }
+
+        /* shows list view items and view content together*/
+        @media (orientation: landscape) {
+            flex-direction: column;
+            align-items: start;
+            gap: 12px;
+
+            /* navbar button */
+            &>article {
+                &>a {
+                    height: 56px;
+                }
+
+                /* navigation destination */
+                &>section {
+
+                    /* if no :target then show first-of-type */
+                    &:not(:has(:target))>article:first-of-type>section:first-of-type {
+                        display: flex;
+                    }
+
+                    flex-direction: column;
+                    inset: 0 0 0 80px;
+
+                    /* list view item */
+                    &>article {
+                        border: 1px solid red;
+
+                        &>a {
+                            height: 100px;
+                            width: 220px;
+                            border: 10px solid yellow;
+                        }
+
+                        /* list view content */
+                        &>section {
+
+                            &:target,
+                            &:has(:target) {
+                                display: flex;
+                            }
+
+                            display: none;
+                            background-color: #777;
+                            /* position: absolute; */
+                            position: fixed;
+                            inset: 0 0 0 300px;
+                        }
                     }
                 }
             }
