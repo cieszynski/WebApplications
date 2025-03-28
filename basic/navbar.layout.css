@@ -1,0 +1,175 @@
+@layer layout {
+
+    main {
+
+        position: relative;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+
+        /* common for all headlines */
+        & h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-size: 0;
+        }
+
+        /* common for all sections */
+        & section {
+            display: none;
+            position: fixed;
+        }
+
+        /* if no :target then show first-of-type */
+        &:not(:has(:target))>article:first-of-type>section:first-of-type {
+            display: flex;
+        }
+
+        /* if no :target then 1st navbar button active */
+        &:not(:has(:target))>article:first-of-type>a,
+        /*  */
+        &>article:has(:target)>a {
+            color: #000;
+        }
+
+        /* navbar button & navigation destination*/
+        &>article {
+
+            /* navbar button */
+            &>a {
+                position: relative;
+                flex-direction: column;
+                justify-content: end;
+                align-items: center;
+                display: flex;
+                width: 80px;
+                /* TODO */
+                color: #999;
+                /* navbar button always on top */
+                z-index: 1;
+            }
+
+            /* navigation destination */
+            &>section {
+
+                overflow: clip scroll;
+
+                &:target,
+                &:has(:target) {
+                    display: flex;
+                }
+
+                /* list view item */
+                &>article {
+                    &:has(:target)>a {
+                        color: #000;
+                    }
+
+                    &>a {
+                        display: block;
+                        height: 100%;
+                    }
+                }
+            }
+        }
+
+        /* shows list view items or view content */
+        @media (orientation: portrait) {
+            flex-direction: row;
+            align-items: end;
+
+            &>article {
+                &>a {
+                    height: 80px;
+                }
+
+                &>section {
+
+                    flex-direction: column;
+                    inset: 0 0 0px 0;
+
+                    &>article {
+
+                        &>a {
+                            height: 120px;
+                        }
+
+                        &>section {
+                            inset: 0 0 80px 0;
+
+                            &:target,
+                            &:has(:target) {
+                                color: #000;
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+
+        /* shows list view items and view content together*/
+        @media (orientation: landscape) {
+            flex-direction: column;
+            align-items: start;
+
+            &>article {
+
+                /* NAVBAR BUTTON */
+                &>a {
+                    width: clamp(80px, 6.7vw, 160px);
+                    aspect-ratio: 80 / 56;
+                }
+
+                /* NAVIGATION DESTINATION */
+                &>section {
+
+                    /* navbar width depends on vw */
+                    inset: 0 0 0 clamp(80px, 6.7vw, 160px);
+                    flex-direction: column;
+
+                    /* if no :target then show first-of-type */
+                    &:not(:has(:target))>article:first-of-type>section:first-of-type {
+                        display: flex;
+                    }
+
+                    /* list view item (non selected) */
+                    &:not(:has(:target))>article:first-of-type>a {
+                        color: #000;
+                    }
+
+                    /* LISTVIEW ITEM + LIST CONTENT */
+                    &>article {
+
+                        /* active list view item */
+                        &:has(:target)>a {
+                            color: #000;
+                        }
+
+                        /* listview item width depends on vw */
+                        /* listview item height depends on content */
+                        &>a {
+                            /* width: min(calc(35vw - 80px), 260px); */
+                            width: clamp(240px, 20.1vw, 520px);
+                            height: auto;
+                        }
+
+                        /* list view content */
+                        &>section {
+
+                            inset: 0 0 0 clamp(320px, 26.8vw, 520px);
+
+                            &:target,
+                            &:has(:target) {
+                                display: flex;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

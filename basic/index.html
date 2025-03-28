@@ -6,9 +6,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" type="text/css" href="main.basic.css">
-
     <style>
+        @import url("navbar.layout.css");
+        @import url("navbar.style.css");
+        @layer layout, style;
+
         *,
         *::after,
         *::before {
@@ -41,136 +43,90 @@
     <h1>h1</h1>
     <main>
         <article>
+            <h2>h2</h2>
             <section id="s1">
+                <h3>h3</h3>
                 <article>
+                    <h4>h4</h4>
                     <section id="s11">
-                        section11a
+                        <h5>h4</h5>
+                        <p>p11</p>
                     </section>
                     <a href="#s11">
-                        <h3>h3a1</h3>
+                        a11
                     </a>
                 </article>
                 <article>
+                    <h3>h3</h3>
                     <section id="s12">
-                        section12
+                        <h4>h4</h4>
+                        <p>p12</p>
                     </section>
                     <a href="#s12">
-                        <h3>h3a2</h3>
+                        a12
                     </a>
                 </article>
             </section>
-            <a href="#s1" style="--url-active-icon-mask: url('/icons/filled/home.svg');--url-inactive-icon-mask: url('/icons/outlined/home.svg')">
-                <h2>Start</h2>
+            <a href="#s1">
+                a1
             </a>
         </article>
         <article>
+            <h2>h2</h2>
             <section id="s2">
+                <h3>h3</h3>
                 <article>
+                    <h4>h4</h4>
                     <section id="s21">
-                        section21a
+                        <h5>h4</h5>
+                        <p>p21</p>
                     </section>
                     <a href="#s21">
-                        <h3>h3a1</h3>
+                        a21
                     </a>
                 </article>
                 <article>
+                    <h4>h4</h4>
                     <section id="s22">
-                        section22
+                        <h5>h4</h5>
+                        <p>p22</p>
                     </section>
                     <a href="#s22">
-                        <h3>h3a2</h3>
+                        a22
                     </a>
                 </article>
             </section>
-            <a href="#s2" style="--url-active-icon-mask: url('/icons/filled/info.svg');--url-inactive-icon-mask: url('/icons/outlined/info.svg')">
-                <h2>Info</h2>
+            <a href="#s2">
+                a2
             </a>
         </article>
         <article>
+            <h2>h2</h2>
             <section id="s3">
+                <h3>h3</h3>
                 <article>
+                    <h4>h4</h4>
                     <section id="s31">
-                        section31a
+                        <h5>h4</h5>
+                        <p>p31</p>
                     </section>
                     <a href="#s31">
-                        <h3>h3a1</h3>
+                        a31
                     </a>
                 </article>
                 <article>
+                    <h4>h4</h4>
                     <section id="s32">
-                        section32
+                        <h5>h4</h5>
+                        <p>p32</p>
                     </section>
                     <a href="#s32">
-                        <h3>h3a2</h3>
-                    </a>
-                </article>
-                <article>
-                    <section id="s33">
-                        section33
-                    </section>
-                    <a href="#s33">
-                        <h3>h3a2</h3>
-                    </a>
-                </article>
-                <article>
-                    <section id="s34">
-                        s34
-                    </section>
-                    <a href="#s34">
-                        <h3>34</h3>
-                    </a>
-                </article>
-                <article>
-                    <section id="s35">
-                        s35
-                    </section>
-                    <a href="#s35">
-                        <h3>35</h3>
-                    </a>
-                </article>
-                <article>
-                    <section id="s36">
-                        s36
-                    </section>
-                    <a href="#s36">
-                        <h3>36</h3>
-                    </a>
-                </article>
-                <article>
-                    <section id="s37">
-                        s37
-                    </section>
-                    <a href="#s37">
-                        <h3>37</h3>
-                    </a>
-                </article>
-                <article>
-                    <section id="s38">
-                        s38
-                    </section>
-                    <a href="#s38">
-                        <h3>38</h3>
-                    </a>
-                </article>
-                <article>
-                    <section id="s39">
-                        s39
-                    </section>
-                    <a href="#s39">
-                        <h3>39</h3>
-                    </a>
-                </article>
-                <article>
-                    <section id="s40">
-                        s40
-                    </section>
-                    <a href="#s40">
-                        <h3>40</h3>
+                        a32
                     </a>
                 </article>
             </section>
-            <a href="#s3" style="--url-active-icon-mask: url('/icons/filled/help.svg');--url-inactive-icon-mask: url('/icons/outlined/help.svg')">
-                <h2>Hilfe</h2>
+            <a href="#s3">
+                a1
             </a>
         </article>
     </main>

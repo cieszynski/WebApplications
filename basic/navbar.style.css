@@ -1,0 +1,120 @@
+
+@layer style {
+
+    main {
+
+        /* if no :target then show first-of-type */
+        &:not(:has(:target))>article:first-of-type>section:first-of-type {
+        }
+
+        /* if no :target then 1st navbar button active */
+        &:not(:has(:target))>article:first-of-type>a,
+        /* if :target then navbar button active */
+        &>article:has(:target)>a {
+            color: #000;
+        }
+
+        /* NAVBAR BUTTON + NAVIGATION DESTINATION */
+        &>article {
+
+            /* NAVBAR BUTTON */
+            &>a {
+                background-color: #ddd;
+            }
+
+            /* NAVIGATION DESTINATION */
+            &>section {
+                
+                overflow: clip scroll;
+
+                &:target,
+                &:has(:target) {
+                }
+
+                /* LISTVIEW ITEM */
+                &>article {
+                    &:has(:target)>a {
+                        color: #000;
+                    }
+
+                    &>a {
+                    }
+                }
+            }
+        }
+
+        /* shows list view items or view content */
+        @media (orientation: portrait) {
+
+            &>article {
+                &>a {
+                }
+
+                &>section {
+                    background-color: #ff000099;
+
+                    &>article {
+
+                        &>a {
+                        }
+
+                        &>section {
+
+                            &:target,
+                            &:has(:target) {
+                                color: #000;
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+
+        /* shows list view items and view content together*/
+        @media (orientation: landscape) {
+
+            &>article {
+
+                /* NAVBAR BUTTON */
+                &>a {
+                }
+
+                /* NAVIGATION DESTINATION */
+                &>section {
+
+                    /* if no :target then show first-of-type */
+                    &:not(:has(:target))>article:first-of-type>section:first-of-type {
+                    }
+
+                    /* list view item (non selected) */
+                    &:not(:has(:target))>article:first-of-type>a {
+                        color: #000;
+                    }
+
+                    /* LISTVIEW ITEM + LIST CONTENT */
+                    &>article {
+
+                        /* active listview item */
+                        &:has(:target)>a {
+                            color: #000;
+                        }
+
+                        &>a {
+                            border: 1px solid red;
+                        }
+
+                        /* list view content */
+                        &>section {
+
+                            &:target,
+                            &:has(:target) {
+                                display: flex;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

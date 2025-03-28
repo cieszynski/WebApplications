@@ -52,13 +52,21 @@
         height: 100%;
         justify-content: center;
 
+        /* common for all sections */
+        & section {
+            display: none;
+            position: fixed;
+        }
+
         /* if no :target then show first-of-type */
         &:not(:has(:target))>article:first-of-type>section:first-of-type {
             display: flex;
         }
 
         /* if no :target then 1st navbar button active */
-        &:not(:has(:target))>article:first-of-type>a {
+        &:not(:has(:target))>article:first-of-type>a,
+        /*  */
+        &>article:has(:target)>a {
             --navbar-button-color: var(--color-on-surface);
             --navbar-button-icon: var(--url-active-icon-mask);
             --navbar-button-active-indicator-width: 64px;
@@ -67,13 +75,6 @@
 
         /* navbar button & navigation destination*/
         &>article {
-
-            &:has(:target)>a {
-                --navbar-button-color: var(--color-on-surface);
-                --navbar-button-icon: var(--url-active-icon-mask);
-                --navbar-button-active-indicator-width: 64px;
-                --navbar-button-active-indicator-opacity: 1;
-            }
 
             /* navbar button */
             &>a {
@@ -94,6 +95,7 @@
                 }
             }
 
+            /* icon */
             &>a::after {
                 content: "";
                 position: absolute;
@@ -106,7 +108,7 @@
                 background-color: currentColor;
             }
 
-            /* Active indicator */
+            /* active indicator */
             &>a::before {
                 transition: width .1s, opacity .1s;
                 content: "";
@@ -120,6 +122,7 @@
                 opacity: var(--navbar-button-active-indicator-opacity);
             }
 
+            /* active indicator (hover) */
             &>a:hover::before {
                 --navbar-button-active-indicator-color: var();
                 --navbar-button-active-indicator-width: 64px;
@@ -128,6 +131,8 @@
 
             /* navigation destination */
             &>section {
+                
+                background-color: #ddd;
                 overflow: clip scroll;
 
                 &:target,
@@ -135,13 +140,12 @@
                     display: flex;
                 }
 
-                display: none;
-                position: absolute;
-                background-color: #ddd;
-
-
                 /* list view item */
                 &>article {
+                    &:has(:target)>a {
+                        color: magenta
+                    }
+
                     &>a {
                         display: block;
                         height: 100%;
@@ -194,7 +198,7 @@
 
                             background-color: #777;
                             position: fixed;
-                            display: none;
+                            /* display: none; */
                             opacity: 0;
                             scale: .7;
                             inset: 0 0 80px 0;
@@ -216,8 +220,9 @@
             align-items: start;
             gap: 12px;
 
-            /* navbar button */
             &>article {
+
+                /* navbar button */
                 &>a {
                     height: 56px;
                 }
@@ -230,12 +235,22 @@
                         display: flex;
                     }
 
+                    /* list view item (non selected) */
+                    &:not(:has(:target))>article:first-of-type>a {
+                        color: white
+                    }
+
                     flex-direction: column;
                     inset: 0 0 0 80px;
 
                     /* list view item */
                     &>article {
                         border: 1px solid red;
+
+                        /* active list view item */
+                        &:has(:target)>a {
+                            color: white
+                        }
 
                         &>a {
                             height: 100px;
@@ -252,7 +267,7 @@
                                 display: flex;
                             }
 
-                            display: none;
+                            /* display: none; */
                             background-color: #777;
                             /* fixed: left list view item scrollable */
                             position: fixed;
