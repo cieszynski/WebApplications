@@ -1,11 +1,9 @@
-
 @layer style {
 
     main {
 
         /* if no :target then show first-of-type */
-        &:not(:has(:target))>article:first-of-type>section:first-of-type {
-        }
+        &:not(:has(:target))>article:first-of-type>section:first-of-type {}
 
         /* if no :target then 1st navbar button active */
         &:not(:has(:target))>article:first-of-type>a,
@@ -20,16 +18,11 @@
             /* NAVBAR BUTTON */
             &>a {
                 background-color: #ddd;
+                color: #999;
             }
 
             /* NAVIGATION DESTINATION */
             &>section {
-                
-                overflow: clip scroll;
-
-                &:target,
-                &:has(:target) {
-                }
 
                 /* LISTVIEW ITEM */
                 &>article {
@@ -37,8 +30,7 @@
                         color: #000;
                     }
 
-                    &>a {
-                    }
+                    &>a {}
                 }
             }
         }
@@ -46,25 +38,25 @@
         /* shows list view items or view content */
         @media (orientation: portrait) {
 
+            /* NAVBAR BUTTON + NAVIGATION DESTINATION (portrait) */
             &>article {
-                &>a {
-                }
 
+                /* NAVBAR BUTTON (portrait) */
+                &>a {}
+
+                /* NAVIGATION DESTINATION (portrait) */
                 &>section {
                     background-color: #ff000099;
 
+                    /* LISTVIEW ITEM + CONTENT (portrait) */
                     &>article {
 
-                        &>a {
-                        }
+                        /* LISTVIEW ITEM (portrait) */
+                        &>a {}
 
+                        /* LISTVIEW CONTENT (portrait) */
                         &>section {
-
-                            &:target,
-                            &:has(:target) {
-                                color: #000;
-                            }
-
+                            background-color: #ffff00;
                         }
                     }
                 }
@@ -76,35 +68,34 @@
 
             &>article {
 
-                /* NAVBAR BUTTON */
-                &>a {
-                }
+                /* NAVBAR BUTTON (landscape) */
+                &>a {}
 
-                /* NAVIGATION DESTINATION */
+                /* NAVIGATION DESTINATION (landscape) */
                 &>section {
 
                     /* if no :target then show first-of-type */
-                    &:not(:has(:target))>article:first-of-type>section:first-of-type {
-                    }
+                    &:not(:has(:target))>article:first-of-type>section:first-of-type {}
 
                     /* list view item (non selected) */
                     &:not(:has(:target))>article:first-of-type>a {
                         color: #000;
                     }
 
-                    /* LISTVIEW ITEM + LIST CONTENT */
+                    /* LISTVIEW ITEM + LIST CONTENT (landscape) */
                     &>article {
 
-                        /* active listview item */
+                        /* LISTVIEW ITEM (landscape) (active) */
                         &:has(:target)>a {
                             color: #000;
                         }
 
+                        /* LISTVIEW ITEM (landscape) */
                         &>a {
                             border: 1px solid red;
                         }
 
-                        /* list view content */
+                        /* LISTVIEW CONTENT (landscape) */
                         &>section {
 
                             &:target,

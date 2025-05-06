@@ -21,6 +21,11 @@
         & section {
             display: none;
             position: fixed;
+
+            &:target,
+            &:has(:target) {
+                display: flex;
+            }
         }
 
         /* if no :target then show first-of-type */
@@ -35,10 +40,10 @@
             color: #000;
         }
 
-        /* navbar button & navigation destination*/
+        /* NAVBAR BUTTON + NAVIGATION DESTINATION */
         &>article {
 
-            /* navbar button */
+            /* NAVBAR BUTTON */
             &>a {
                 position: relative;
                 flex-direction: column;
@@ -46,23 +51,16 @@
                 align-items: center;
                 display: flex;
                 width: 80px;
-                /* TODO */
-                color: #999;
                 /* navbar button always on top */
                 z-index: 1;
             }
 
-            /* navigation destination */
+            /* NAVIGATION DESTINATION */
             &>section {
 
                 overflow: clip scroll;
 
-                &:target,
-                &:has(:target) {
-                    display: flex;
-                }
-
-                /* list view item */
+                /* LISTVIEW ITEM */
                 &>article {
                     &:has(:target)>a {
                         color: #000;
@@ -81,30 +79,29 @@
             flex-direction: row;
             align-items: end;
 
+            /* NAVBAR BUTTON + NAVIGATION DESTINATION (portrait) */
             &>article {
                 &>a {
                     height: 80px;
                 }
 
+                /* NAVIGATION DESTINATION (portrait) */
                 &>section {
 
                     flex-direction: column;
                     inset: 0 0 0px 0;
 
+                    /* LISTVIEW ITEM + CONTENT (portrait) */
                     &>article {
 
+                        /* LISTVIEW ITEM (portrait) */
                         &>a {
-                            height: 120px;
+                            min-height: 120px;
                         }
 
+                        /* LISTVIEW CONTENT (portrait) */
                         &>section {
-                            inset: 0 0 80px 0;
-
-                            &:target,
-                            &:has(:target) {
-                                color: #000;
-                            }
-
+                            inset: 0;
                         }
                     }
                 }
@@ -116,15 +113,16 @@
             flex-direction: column;
             align-items: start;
 
+            /* NAVBAR BUTTON + NAVIGATION DESTINATION (landscape) */
             &>article {
 
-                /* NAVBAR BUTTON */
+                /* NAVBAR BUTTON (landscape) */
                 &>a {
                     width: clamp(80px, 6.7vw, 160px);
                     aspect-ratio: 80 / 56;
                 }
 
-                /* NAVIGATION DESTINATION */
+                /* NAVIGATION DESTINATION (landscape) */
                 &>section {
 
                     /* navbar width depends on vw */
@@ -141,23 +139,23 @@
                         color: #000;
                     }
 
-                    /* LISTVIEW ITEM + LIST CONTENT */
+                    /* LISTVIEW ITEM + LISTVIEW CONTENT (landscape) */
                     &>article {
 
-                        /* active list view item */
+                        /* LISTVIEW ITEM (landscape) (active) */
                         &:has(:target)>a {
                             color: #000;
                         }
 
+                        /* LISTVIEW ITEM (landscape) */
                         /* listview item width depends on vw */
                         /* listview item height depends on content */
                         &>a {
-                            /* width: min(calc(35vw - 80px), 260px); */
                             width: clamp(240px, 20.1vw, 520px);
                             height: auto;
                         }
 
-                        /* list view content */
+                        /* LISTVIEW CONTENT (landscape) */
                         &>section {
 
                             inset: 0 0 0 clamp(320px, 26.8vw, 520px);
