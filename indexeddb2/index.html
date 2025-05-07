@@ -6,6 +6,27 @@
     <meta charset="utf-8">
 
     <script>
+        navigator.serviceWorker
+            .register("./ddb.js")
+            .catch(console.error);
+
+        navigator.serviceWorker.onmessage = (event) => {
+            console.log(event)
+        }
+
+        function bla() {
+            fetch('/data?a=b', {
+                method: "BLA",
+            })
+                .then((response) => {
+                    return response.text();
+                })
+                .then(text => {
+                    console.log(text)
+                })
+        }
+    </script>
+    <script type="bla">
         Object.defineProperty(globalThis, "ddb", {
             value: class {
 
@@ -179,8 +200,11 @@
 
 <body>
     indexeddb2
-
+    <button onclick="bla()">BLA</button>
     <script>
+
+    </script>
+    <script type="bla">
         async function run() {
             let db = await ddb.open({
                 version: 1,
