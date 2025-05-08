@@ -1,11 +1,28 @@
 
+
+self.addEventListener('load', (event) => {
+    console.debug('load', event);
+
+
+
+    navigator.serviceWorker
+        .register("ddb.js")
+        .catch(console.error);
+
+    navigator.serviceWorker.onmessage = (event) => {
+        console.log(event)
+    }
+})
+
+/* SERVICEWORKER */
 self.addEventListener("fetch", (event) => {
-    console.log('fetch', event);
+    console.debug('fetch', event);
+
     event.respondWith(
         (async () => {
             const url = new URL(event.request.url);
 
-            switch(url.pathname) {
+            switch (url.pathname) {
                 case '/data':
                     return new Response('peng')
             }
@@ -25,14 +42,14 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-    console.log('activate', event)
+    console.log('activate', event, ddb.code);
     // When a service worker is initially registered,
     // pages won't use it until they next load.
     // The claim() method causes those pages to be
-    //  controlled immediately:
+    // controlled immediately:
     return self.clients.claim();
 });
 
 self.addEventListener('message', (event) => {
-    event.source.postMessage("bla")
+    event.source.postMessage("blub")
 })

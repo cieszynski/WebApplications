@@ -5,26 +5,120 @@
     <title>indexeddb2</title>
     <meta charset="utf-8">
 
+    <!-- <script src="./ddb.js"></script> -->
     <script>
-        navigator.serviceWorker
-            .register("./ddb.js")
-            .catch(console.error);
+        Object.defineProperty(globalThis, 'ddb', {
+            value: {
+                open: (...options) => new Promise((resolve, reject) => {
 
-        navigator.serviceWorker.onmessage = (event) => {
-            console.log(event)
-        }
+                    const request = indexedDB.open(
+                        (options.length && typeof options.at(0) !== 'string')
+                            ? location.hostname
+                            : options.at(0),
+                        (options.length && typeof options.at(-1) === 'object')
+                            ? Object
+                                .keys(options.at(-1))
+                                .sort((a, b) => a - b) // asc
+                                .at(-1) // highest
+                            : null
+                    );
 
-        function bla() {
-            fetch('/data?a=b', {
-                method: "BLA",
+                    request.onerror = () => { reject(request.error); };
+                    request.onupgradeneeded = (event) => {
+                        console.debug('onupgradeneeded', event);
+                        const db = event.target.result;
+
+                        Object.entries((options.length && typeof options.at(-1) === 'object')
+                            ? Object
+                                .keys(options.at(-1))
+                                .sort((a, b) => a - b) // asc
+                                .reduce((obj, key) => {
+                                    obj[key] = options.at(-1)[key];
+                                    return obj;
+                                }, {})
+                            : {}).forEach(([version, stores]) => {
+                                console.debug('version: ', version);
+
+                                Object.entries(stores).forEach(([name, indexes]) => {
+                                    if (Array.from(db.objectStoreNames).includes(name)) {
+                                        db.deleteObjectStore(name);
+                                    }
+
+                                    [keypath, ...indexes] = indexes.split(/\s*(?:,)\s*/);
+
+                                    const store = db.createObjectStore(
+                                        name, {
+                                        keyPath: keypath.replace(/[\+@]/, ''),
+                                        autoIncrement: /^[\+@]/.test(keypath)
+                                    });
+
+                                    indexes.forEach(indexName => {
+
+                                        store.createIndex(
+                                            indexName.replace(/[\*!]/, ''),
+                                            indexName
+                                                .split(/\+/)
+                                                // at this point every keypath is an array
+                                                .map(elem => elem.replace(/[\*!]/, ''))
+                                                .reduce((prev, cur, idx) => {
+                                                    switch (idx) {
+                                                        case 0:
+                                                            // indexName is keyPath:
+                                                            return cur;
+                                                        case 1:
+                                                            // indexName is compound key
+                                                            return [prev, cur];
+                                                        default:
+                                                            return [...prev, cur];
+                                                    }
+                                                }),
+                                            {
+                                                multiEntry: /^\*/.test(indexName),
+                                                unique: /^\!/.test(indexName)
+                                            });
+                                    })
+                                });
+                            });
+
+                    }
+                    request.onsuccess = () => {
+                        const db = request.result;
+
+                        resolve(new class DDB {
+
+                        });
+                    }
+                })
+            }
+        })
+
+    </script>
+    <script>
+        async function run() {
+            const db = await ddb.open('bla', {
+                /*                 2: {
+                                    user: "@id, firstname, lastname, firstname+lastname"
+                                }, */
+                11: {
+                    user: "@id, !firstname, *lastname, firstname+lastname+alter"
+                }
             })
-                .then((response) => {
-                    return response.text();
-                })
-                .then(text => {
-                    console.log(text)
-                })
+
+            console.log(db)
         }
+        run()
+        /*         function bla() {
+                  
+                fetch('/data?a=b', {
+                      method: "BLA",
+                  })
+                      .then((response) => {
+                          return response.text();
+                      })
+                      .then(text => {
+                          console.log(text)
+                      }) 
+              }*/
     </script>
     <script type="bla">
         Object.defineProperty(globalThis, "ddb", {
