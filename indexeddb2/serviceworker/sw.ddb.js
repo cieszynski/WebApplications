@@ -26,27 +26,68 @@ const databases = async () => (await indexedDB.databases())
         return obj;
     }, {});
 
+const handle_store_requests = (dbname, storename, http) => new Promise(async (resolve, reject) => {
+
+    switch (http.request.method) {
+        case 'GET': {
+            const list = await databases();
+
+            if (list[dbname]) {
+                indexedDB.open(dbname).onsuccess = (event) => {
+                    const db = event.target.result;
+
+                    const transaction = db.transaction(storename);
+                    const store = transaction.objectStore(storename);
+
+                    resolve(new JSONResponse({
+                        indexes: Array.from(store.indexNames).reduce((obj, key) => {
+                            obj[key] = {
+                                keyPath: store.index(key).keyPath,
+                                multiEntry: store.index(key).multiEntry,
+                                unique: store.index(key).unique
+                            }
+                            return obj
+                        }, {}),
+                        autoIncrement: store.autoIncrement,
+                        keyPath: store.keyPath,
+                        name: store.name
+                    }));
+                    db.close();
+                }
+            } else resolve(new JSONStatusResponse({
+                status: 404,
+            }));
+            break;
+        }
+        default:
+            resolve(new JSONStatusResponse({
+                status: 405,
+                dbname: dbname,
+                storename: storename
+            }));
+    }
+});
+
 const handle_database_requests = (dbname, http) => new Promise(async (resolve, reject) => {
 
     switch (http.request.method) {
-        case 'GET':
-            databases()
-                .then(list => {
-                    if (list[dbname]) {
-                        indexedDB.open(dbname).onsuccess = (event) => {
-                            resolve(new JSONResponse({
-                                stores: Array.from(event.target.result.objectStoreNames),
-                                version: event.target.result.version,
-                                name: event.target.result.name
-                            }));
-                            event.target.result.close();
-                        }
-                    } else resolve(new JSONStatusResponse({
-                        status: 404,
-                    }));
-                });
-            break;
+        case 'GET': {
+            const list = await databases();
 
+            if (list[dbname]) {
+                indexedDB.open(dbname).onsuccess = (event) => {
+                    resolve(new JSONResponse({
+                        stores: Array.from(event.target.result.objectStoreNames),
+                        version: event.target.result.version,
+                        name: event.target.result.name
+                    }));
+                    event.target.result.close();
+                }
+            } else resolve(new JSONStatusResponse({
+                status: 404,
+            }));
+            break;
+        }
         case 'POST':
             const body = await http.request.json();
             const list = await databases();
@@ -144,6 +185,7 @@ self.addEventListener("fetch", async (event) => {
             case !!match[4]: // keypath
                 break;
             case !!match[3]: // storename
+                event.respondWith(handle_store_requests(match[2], match[3], event));
                 break;
             case !!match[2]: // dbname
                 event.respondWith(handle_database_requests(match[2], event));
@@ -154,101 +196,7 @@ self.addEventListener("fetch", async (event) => {
             default:
                 console.error('realy?')
         }
-    };
-    return;
-
-    const routing = new Promise((resolve, reject) => {
-
-        switch (segs.length) {
-            case 1:
-            // break;
-            default:
-                resolve(new JSONStatusResponse({
-                    status: 404
-                }));
-        }
-    });
-
-    event.respondWith(routing);
-
-    return;
-    const prepare = new Promise((resolve, reject) => {
-        try {
-            switch (true) {
-                case ('GET' === method && segs.length === 1):
-                    indexedDB
-                        .databases()
-                        .then(result =>
-                            resolve(new JSONResponse(result)));
-                    break;
-
-                case ('GET' === method && segs.length === 2):
-                    const request = indexedDB.open(name);
-                    request.onerror = () => {
-                        console.error(request.error)
-                        resolve(new JSONResponse(request.error))
-                    }
-                    request.onsuccess = () => {
-                        console.log(request.result.objectStoreNames)
-                        resolve(new JSONResponse(request.result.objectStoreNames));
-                    }
-                    break;
-
-                case ('POST' === method && segs.length === 3):
-                    indexedDB
-                        .databases()
-                        .then(arr => {
-                            console.debug(arr)
-                            let x = arr.reduce((prev, cur, idx, arr) => {
-                                if (cur.name === name) return cur;
-                            })
-
-                            if (x) {
-                                const request = indexedDB.open(x.name, ++x.version);
-                                request.onupgradeneeded = (event) => {
-                                    console.log(event);
-                                    const ostore = event.target.result.createObjectStore(store);
-                                    event.target.result.close() // WICHTIG
-                                    resolve(new JSONResponse(ostore))
-                                }
-                            } else {
-                                console.error(8)
-                                resolve(new JSONResponse({ e: 1 }))
-                            }
-                        });
-                // break;
-
-                default:
-                    resolve(new Response(JSON.stringify({ a: 1 })));
-            }
-
-            /*             const request = indexedDB.open(name, 0);
-                        request.onerror = () => {
-                            console.debug('error', request.error)
-                            resolve(new Response(request.error));
-                        };
-                        request.onupgradeneeded = (event) => {
-                            console.debug('onupgradeneeded')
-                        }
-                        request.onsuccess = () => {
-                            console.debug('onsuccess')
-                            resolve(new Response("onsuccess"));
-                        } */
-        } catch (err) {
-            console.error(err)
-            resolve(new JSONResponse(err));
-        }
-    });
-
-    event.respondWith(prepare);
-
-    /*     event.respondWith(
-            (async () => {
-                const request = await indexedDB.open(dbname);
-    
-                return new Response("hallo")
-            })(), );
-        console.debug(dbname, store, ...path) */
+    }
 });
 
 self.addEventListener('install', (event) => {
