@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <title>animationstate</title>
+    <meta charset="utf-8">
+
+    <style>
+        /* für FF und Webkit erforderlich */
+        @property --color-a {
+            syntax: "<color>";
+            inherits: true;
+            initial-value: white;
+        }
+
+        /* für FF und Webkit erforderlich */
+        @property --color-b {
+            syntax: "<color>";
+            inherits: true;
+            initial-value: white;
+        }
+
+        /*  Funktioniert nicht, da zu jedem Zeitpunkt
+            der Wert gesetzt sein muss, sonst wird interpoliert */
+        @keyframes state {
+            0% {
+                --state: green;
+                --color-a: black;
+            }
+
+            1% {
+                --opacity: .5;
+                --state: pink;
+                --color-a: blue;
+                --color-b: black;
+            }
+
+            2% {
+                --state: red;
+                --color-a: black;
+                --color-b: yellow;
+            }
+
+            3% {
+                --color-a: black;
+            }
+
+            100% {
+                --state: blue;
+            }
+        }
+
+        body {
+            animation-name: state;
+            animation-duration: 100s;
+            animation-play-state: paused;
+            animation-delay: 0s;
+            animation-fill-mode: both;
+            animation-timing-function: linear;
+            background-color: var(--state);
+        }
+
+        body:hover {
+            animation-delay: -2s;
+        }
+
+        body:active {
+            animation-delay: -1s;
+        }
+
+        div#a {
+            color: var(--color-a);
+        }
+
+        div#b {
+            color: var(--color-b);
+        }
+    </style>
+</head>
+
+<body>
+    animationstate<div id="a">AAA</div><div id="b">BBB</div>
+</body>
+
+</html>

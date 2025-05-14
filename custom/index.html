@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <title>custom</title>
+    <meta charset="utf-8">
+
+    <style>
+        *:not(:defined) {
+            background-color: #ddd;
+        }
+    </style>
+
+    <template id="temp">
+        <style>
+            button {
+                background-color: red;
+            }
+        </style>
+        <button><slot>nix</slot></button>
+    </template>
+    <script>
+        class AppCustom extends HTMLElement {
+
+            static count = 0;
+            static formAssociated = true;
+
+            constructor() {
+                super();
+
+                //
+                this.internal = this.attachInternals();
+                this.attachShadow({ mode: "open" });
+/*                 addEventListener('click', (event) => {
+                    console.dir(event.target)
+                }) */
+                console.log('constructor')
+            }
+
+            connectedCallback() {
+                this.shadowRoot.appendChild(temp.content.cloneNode(true));
+                this.id = 'A' + (++AppCustom.count)
+            }
+        }
+
+        customElements.define("app-custom", AppCustom);
+    </script>
+</head>
+
+<body>
+    <label>bla
+        <app-custom form="data">
+            hallo
+        </app-custom></label>
+    <label for="cus">blub</label>
+    <form id="data">
+    </form>
+    <app-custom form="data">
+        hallo2
+    </app-custom></label>
+        <button>Button</button>
+</body>
+
+</html>

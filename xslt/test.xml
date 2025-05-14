@@ -1,0 +1,15 @@
+<?xml-stylesheet type="text/xml" href="test.xsl"?>
+<root xmlns:e="abc">
+    <element class="bla">
+
+    </element>
+    <a>
+        <b>
+            <c>
+                <e:element class="bla">
+
+                </e:element>
+            </c>
+        </b>
+    </a>
+</root>
