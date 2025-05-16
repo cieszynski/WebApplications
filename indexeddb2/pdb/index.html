@@ -96,13 +96,18 @@
                         });
                     }
                 }, {
+                    apply: function (target, thisArg, argumentsList) {
+                        console.log(target)
+                    },
                     get(target, storeName, proxy) {
-
+                        console.log(storeName)
                         if (['builder', 'delete'].includes(storeName)) {
                             return Reflect.get(...arguments);
                         }
 
                         const connect = (dbName) => new Promise((resolve, reject) => {
+
+                            console.log(dbName)
                             indexedDB.databases()
                                 .then(arr => {
                                     if (arr.find(obj => obj.name === dbName)) {
@@ -151,20 +156,176 @@
                 });
             }
         });
+
+
+        Object.defineProperty(globalThis, 'bla', {
+            value: new Proxy((dbName) => {
+                
+                return new Proxy({
+
+                    builder: (version) => {
+
+                        return {
+                            build: (obj) => {
+
+                                return new Promise((resolve, reject) => {
+
+                                    const request = indexedDB.open(dbName, version);
+                                    request.onerror = () => { reject(request.error); }
+                                    request.onblocked = () => { reject(request.error); }
+                                    request.onsuccess = () => {
+                                        request.result.close();
+                                        resolve('OK');
+                                    }
+                                    request.onupgradeneeded = (event) => {
+                                        const db = request.result;
+
+                                        Object.entries(obj).forEach(([dbName, definition]) => {
+                                            if (Array.from(db.objectStoreNames).includes(dbName)) {
+                                                // TODO save data
+                                                console.debug("store '%s' deleted", dbName);
+                                                db.deleteObjectStore(dbName);
+                                            }
+
+                                            [keypath, ...indexes] = definition.split(/\s*(?:,)\s*/);
+
+                                            const store = db.createObjectStore(
+                                                dbName, {
+                                                keyPath: keypath.replace(/[\+@]/, ''),
+                                                autoIncrement: /^[\+@]/.test(keypath)
+                                            });
+
+                                            console.debug("store '%s' created", dbName);
+
+                                            indexes.forEach(indexName => {
+
+                                                store.createIndex(
+                                                    indexName.replace(/[\*!]/, ''),
+                                                    indexName
+                                                        .split(/\+/)
+                                                        // at this point every keypath is an array
+                                                        .map(elem => elem.replace(/[\*!]/, ''))
+                                                        .reduce((prev, cur, idx) => {
+                                                            switch (idx) {
+                                                                case 0:
+                                                                    // indexName is keyPath:
+                                                                    return cur;
+                                                                case 1:
+                                                                    // indexName is compound key
+                                                                    return [prev, cur];
+                                                                default:
+                                                                    return [...prev, cur];
+                                                            }
+                                                        }),
+                                                    {
+                                                        multiEntry: /^\*/.test(indexName),
+                                                        unique: /^\!/.test(indexName)
+                                                    });
+
+
+                                                console.debug("index '%s' created", indexName);
+                                            })
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    },
+                    delete: () => {
+
+                        return new Promise((resolve, reject) => {
+
+                            indexedDB.databases()
+                                .then(arr => {
+                                    if (arr.find(obj => obj.name === dbName)) {
+                                        const request = indexedDB.deleteDatabase(dbName);
+                                        request.onerror = () => reject(request.error);
+                                        request.onsuccess = () => resolve(request.result);
+                                    } else {
+                                        reject(Error(`Database '${dbName}' not found`));
+                                    }
+                                });
+                        });
+                    }
+                }, {
+                    get(target, storeName, proxy) {
+                        if (['builder', 'delete'].includes(storeName)) {
+                            return Reflect.get(...arguments);
+                        }
+
+                        const connect = (dbName) => new Promise((resolve, reject) => {
+
+                            indexedDB.databases()
+                                .then(arr => {
+                                    if (arr.find(obj => obj.name === dbName)) {
+                                        const request = indexedDB.open(dbName);
+                                        request.onerror = () => reject(request.error);
+                                        request.onsuccess = () => resolve(request.result);
+                                    } else {
+                                        reject(Error(`Database '${dbName}' not found`));
+                                    }
+                                })
+                        });
+
+                        const handle = (verb, ...args) => {
+                            return new Promise((resolve, reject) => {
+                                connect(dbName)
+                                    .then(db => {
+                                        if (Array.from(db.objectStoreNames).includes(storeName)) {
+                                            const request = db
+                                                .transaction(storeName, ['add', 'put', 'delete'].includes(verb)
+                                                    ? 'readwrite'
+                                                    : 'readonly')
+                                                .objectStore(storeName)
+                                            [verb](...args);
+                                            request.onerror = () => reject(request.error);
+                                            request.onsuccess = () => {
+                                                resolve(request.result);
+                                            };
+                                        } else reject(Error(`Store '${storeName}' not found`));
+
+                                        db.close();
+                                    })
+                                    .catch(err => reject(err));
+                            });
+                        }
+
+                        return Object.freeze({
+                            add(obj, key) { return handle('add', obj, key); },
+
+                            delete(key) { return handle('delete', key); },
+
+                            get(key) { return handle('get', key); },
+
+                            getAll(query, count) { return handle('getAll', query, count); }
+                        })
+                    }
+                });
+            }, {
+
+                get(target, property, proxy) {
+                    switch (property) {
+                        case 'peng':
+                            return () => { return 2 }
+                            break;
+                    }
+                }
+            })
+        });
     </script>
 </head>
 
 <body>
-    dbp
+    pdb
     <script>
 
-       /* pdb('db1')
-            .delete()
-            .then((ok) => {
-                console.debug(ok)
-            })
-            .catch(ex => console.error(ex))  */
-           pdb('db1')
+        /* pdb('db1')
+             .delete()
+             .then((ok) => {
+                 console.debug(ok)
+             })
+             .catch(ex => console.error(ex))  */
+        /*   pdb('db1')
                 .builder(1)
                 .build({
                     user: "@id, !firstname, *lastname, firstname+lastname+alter"
@@ -173,15 +334,21 @@
                     console.debug(ok)
                 })
                 .catch(ex => console.error(ex))
-         /*    */
-      /*           pdb('db1').user.add({
-                    a: 1
-                }).then(key => console.log(key))
-                    .catch(err => console.error(err)) 
-                    */
-        pdb('db1').user.getAll().then(key => console.log(key))
-            .catch(err => console.error(err))
-  /*            */
+             */
+        /*           pdb('db1').user.add({
+                      a: 1
+                  }).then(key => console.log(key))
+                      .catch(err => console.error(err)) 
+                      */
+        /*      pdb('db1').user.getAll().then(key => console.log(key))
+                 .catch(err => console.error(err))
+                  */
+        bla('db1').user.getAll().then(v => console.log(v))
+        /*         bla('db1').user.add({
+                              a: 1
+                          }).then(key => console.log(key))
+                              .catch(err => console.error(err)) */
+        console.log(bla.peng())
     </script>
 </body>
 

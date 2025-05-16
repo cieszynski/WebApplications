@@ -9,6 +9,10 @@
         *:not(:defined) {
             background-color: #ddd;
         }
+
+        app-radiobutton {
+            outline: 2px solid black;
+        }
     </style>
 
     <template id="temp">
@@ -17,48 +21,137 @@
                 background-color: red;
             }
         </style>
-        <button><slot>nix</slot></button>
+        <button>
+            <slot>nix</slot>
+        </button>
     </template>
     <script>
         class AppCustom extends HTMLElement {
 
             static count = 0;
             static formAssociated = true;
+            static {
+                Object.defineProperty(globalThis, 'quest', {
+                    value: new class Quest {
+                        constructor() {
+                            console.log('Quest')
+                        }
+                    }
+                });
 
+                Object.freeze(globalThis.quest);
+            }
             constructor() {
                 super();
 
                 //
                 this.internal = this.attachInternals();
-                this.attachShadow({ mode: "open" });
-/*                 addEventListener('click', (event) => {
-                    console.dir(event.target)
-                }) */
-                console.log('constructor')
+                this
+                    .attachShadow({ mode: "open" })
+                    .appendChild(temp.content.cloneNode(true));
+                this.addEventListener('click', (event) => {
+                    //console.dir(event.target)
+                    console.log(this.closest('label'))
+                })
+                //console.log('constructor')
             }
 
             connectedCallback() {
-                this.shadowRoot.appendChild(temp.content.cloneNode(true));
-                this.id = 'A' + (++AppCustom.count)
+                console.log(this.closest('label'))
+                //this.shadowRoot.appendChild(temp.content.cloneNode(true));
+                //this.id = 'A' + (++AppCustom.count)
+
             }
         }
 
         customElements.define("app-custom", AppCustom);
+
+
+        class AppRadioGroup extends HTMLElement {
+            constructor() {
+                super();
+            }
+
+            connectedCallback() {
+                this.role = 'radiogroup';
+            }
+        }
+
+        customElements.define("app-radiogroup", AppRadioGroup);
+
+        class AppRadioButton extends HTMLElement {
+
+            static {
+                (new CSSStyleSheet())
+                    .replace(`
+                        app-radiobutton {
+                            background-color: green;
+                        }
+                        app-radiobutton:focus {
+                            background-color: pink;
+                        }
+
+                        app-radiobutton[aria-checked=true] {
+                            background-color: yellow;
+                        }
+
+                        app-radiobutton::before {
+                            content: "X";
+                        }
+                    `)
+                    .then(sheet => document.adoptedStyleSheets.unshift(sheet));
+            }
+
+            constructor() {
+                super();
+
+                this.addEventListener('click', (event) => {
+                    event.target.checked = true
+                });
+
+                this.addEventListener('keydown', (event) => {
+                    console.log(event.key)
+                    event.target.checked = true
+                });
+            }
+
+            connectedCallback() {
+                console.assert(this.closest('app-radiogroup'), "AppRadioGroup not found")
+                this.role = 'radio';
+                this.ariaChecked = false;
+                this.tabIndex = 0
+            }
+
+            set checked(bool) {
+                if (bool) {
+                    this.
+                        closest('app-radiogroup')
+                        .querySelectorAll('app-radiobutton')
+                        .forEach(item => {
+                            item.ariaChecked = (item === this);
+                        })
+                }
+            }
+        }
+
+        customElements.define("app-radiobutton", AppRadioButton);
     </script>
 </head>
 
 <body>
-    <label>bla
-        <app-custom form="data">
-            hallo
-        </app-custom></label>
-    <label for="cus">blub</label>
-    <form id="data">
-    </form>
-    <app-custom form="data">
-        hallo2
-    </app-custom></label>
-        <button>Button</button>
+    <app-radiogroup>
+        <label>
+            <app-radiobutton id="a" aria-labelledby="a">
+                <img alt="radiobutton" />
+            </app-radiobutton>
+        </label>
+        <label id="b">radiobutton
+            <app-radiobutton aria-labelledby="b">
+
+            </app-radiobutton>
+        </label>
+    </app-radiogroup>
+
 </body>
 
 </html>
